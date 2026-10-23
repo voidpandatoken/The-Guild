@@ -1,0 +1,874 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>THE SETTLEMENT LEDGER — The Guild</title>
+  <meta name="robots" content="noindex, nofollow" />
+  
+  <!-- Google Fonts: Playfair Display & Montserrat -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --bg-obsidian: #080808;
+      --bg-charcoal: #101010;
+      --bg-panel: #141414;
+      --brass-primary: #c5a059;
+      --brass-light: #dfd2b5;
+      --brass-muted: rgba(197, 160, 89, 0.22);
+      --brass-glow: rgba(197, 160, 89, 0.08);
+      --text-ivory: #f4f1ea;
+      --text-ash: #9a968e;
+      --text-slate: #5c5953;
+      --font-serif: 'Playfair Display', Georgia, serif;
+      --font-sans: 'Montserrat', -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--bg-obsidian);
+      color: var(--text-ivory);
+      font-family: var(--font-sans);
+      font-weight: 300;
+      line-height: 1.7;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      background: radial-gradient(circle at 50% 0%, rgba(197, 160, 89, 0.06) 0%, transparent 65%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+      transition: all 0.3s ease;
+    }
+
+    /* Top Navigation */
+    header {
+      position: sticky;
+      top: 0;
+      left: 0;
+      width: 100%;
+      z-index: 100;
+      padding: 1.25rem 3rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: rgba(8, 8, 8, 0.95);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid rgba(197, 160, 89, 0.15);
+    }
+
+    .brand-mark {
+      display: flex;
+      align-items: center;
+      gap: 0.85rem;
+    }
+
+    .brand-crest {
+      width: 24px;
+      height: 24px;
+      border: 1px solid var(--brass-primary);
+      display: grid;
+      place-items: center;
+      font-family: var(--font-serif);
+      font-size: 0.75rem;
+      color: var(--brass-primary);
+      transform: rotate(45deg);
+    }
+
+    .brand-crest span {
+      transform: rotate(-45deg);
+      display: block;
+    }
+
+    .brand-title {
+      font-family: var(--font-serif);
+      font-size: 1rem;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: var(--text-ivory);
+    }
+
+    .member-badge-container {
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+    }
+
+    .member-pill {
+      background: rgba(197, 160, 89, 0.08);
+      border: 1px solid var(--brass-muted);
+      padding: 0.45rem 1rem;
+      font-size: 0.65rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--brass-light);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .status-dot {
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background-color: var(--brass-primary);
+      box-shadow: 0 0 6px var(--brass-primary);
+    }
+
+    .nav-back {
+      font-size: 0.65rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--text-ash);
+    }
+
+    .nav-back:hover {
+      color: var(--brass-primary);
+    }
+
+    /* Allocation Hold Countdown Ribbon */
+    .timer-ribbon {
+      background: linear-gradient(90deg, rgba(197,160,89,0.05) 0%, rgba(197,160,89,0.14) 50%, rgba(197,160,89,0.05) 100%);
+      border-bottom: 1px solid var(--brass-muted);
+      padding: 0.75rem 2rem;
+      text-align: center;
+      font-size: 0.68rem;
+      letter-spacing: 0.24em;
+      text-transform: uppercase;
+      color: var(--text-ivory);
+      position: relative;
+      z-index: 2;
+    }
+
+    .timer-ribbon strong {
+      color: var(--brass-primary);
+      font-weight: 600;
+      font-family: monospace;
+      font-size: 0.82rem;
+      margin-left: 0.5rem;
+    }
+
+    /* Main Content Layout */
+    main {
+      flex: 1;
+      max-width: 1220px;
+      width: 100%;
+      margin: 0 auto;
+      padding: 3.5rem 2rem 5rem;
+      position: relative;
+      z-index: 2;
+    }
+
+    .page-heading {
+      margin-bottom: 2.75rem;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+      padding-bottom: 1.25rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+    }
+
+    .eyebrow {
+      display: block;
+      font-size: 0.65rem;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--brass-primary);
+      margin-bottom: 0.4rem;
+    }
+
+    .page-heading h1 {
+      font-family: var(--font-serif);
+      font-weight: 400;
+      font-size: clamp(1.8rem, 3vw, 2.5rem);
+      color: var(--text-ivory);
+    }
+
+    .security-tag {
+      font-size: 0.65rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--text-ash);
+    }
+
+    .settlement-grid {
+      display: grid;
+      grid-template-columns: 1.35fr 0.95fr;
+      gap: 3rem;
+      align-items: start;
+    }
+
+    /* Left Column: Form Panels */
+    .ledger-panel {
+      background: var(--bg-charcoal);
+      border: 1px solid rgba(197, 160, 89, 0.16);
+      padding: 2.5rem;
+      margin-bottom: 2rem;
+    }
+
+    .panel-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.75rem;
+      padding-bottom: 0.85rem;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    }
+
+    .panel-step {
+      font-family: var(--font-serif);
+      font-style: italic;
+      color: var(--brass-primary);
+      font-size: 0.95rem;
+      margin-right: 0.6rem;
+    }
+
+    .panel-title {
+      font-family: var(--font-serif);
+      font-size: 1.25rem;
+      font-weight: 400;
+      color: var(--text-ivory);
+    }
+
+    .panel-subtitle {
+      font-size: 0.62rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--text-slate);
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.25rem;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.45rem;
+    }
+
+    .form-group.full-width {
+      grid-column: 1 / -1;
+    }
+
+    .form-label {
+      font-size: 0.62rem;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--text-ash);
+    }
+
+    .form-input, .form-select {
+      background: var(--bg-obsidian);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      padding: 0.95rem 1.1rem;
+      color: var(--text-ivory);
+      font-family: var(--font-sans);
+      font-size: 0.84rem;
+      letter-spacing: 0.04em;
+      outline: none;
+      transition: border-color 0.3s ease;
+    }
+
+    .form-input::placeholder {
+      color: var(--text-slate);
+      font-size: 0.75rem;
+      letter-spacing: 0.08em;
+    }
+
+    .form-input:focus, .form-select:focus {
+      border-color: var(--brass-primary);
+    }
+
+    /* Protocol Notice (Loyalty Stripper Guardrail) */
+    .protocol-note {
+      margin-top: 1.5rem;
+      background: rgba(197, 160, 89, 0.04);
+      border-left: 2px solid var(--brass-primary);
+      padding: 0.85rem 1.1rem;
+      font-size: 0.74rem;
+      color: var(--text-ash);
+      line-height: 1.6;
+    }
+
+    .protocol-note strong {
+      color: var(--brass-light);
+      font-weight: 500;
+      letter-spacing: 0.05em;
+    }
+
+    /* CUG Covenant Checkbox */
+    .covenant-box {
+      background: rgba(8, 8, 8, 0.75);
+      border: 1px solid var(--brass-muted);
+      padding: 1.35rem 1.5rem;
+      margin: 1.75rem 0;
+      display: flex;
+      align-items: flex-start;
+      gap: 1rem;
+      cursor: pointer;
+    }
+
+    .covenant-box input[type="checkbox"] {
+      appearance: none;
+      -webkit-appearance: none;
+      width: 18px;
+      height: 18px;
+      border: 1px solid var(--brass-primary);
+      background: var(--bg-obsidian);
+      margin-top: 0.2rem;
+      flex-shrink: 0;
+      cursor: pointer;
+      display: grid;
+      place-items: center;
+    }
+
+    .covenant-box input[type="checkbox"]:checked {
+      background: var(--brass-primary);
+    }
+
+    .covenant-box input[type="checkbox"]:checked::after {
+      content: "✓";
+      color: var(--bg-obsidian);
+      font-size: 0.75rem;
+      font-weight: 700;
+    }
+
+    .covenant-text {
+      font-size: 0.76rem;
+      color: var(--text-ash);
+      line-height: 1.6;
+    }
+
+    .covenant-text strong {
+      color: var(--text-ivory);
+      font-weight: 500;
+    }
+
+    .authorize-btn {
+      width: 100%;
+      background: var(--brass-primary);
+      color: var(--bg-obsidian);
+      border: none;
+      padding: 1.2rem;
+      font-family: var(--font-sans);
+      font-size: 0.76rem;
+      font-weight: 600;
+      letter-spacing: 0.26em;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: all 0.35s ease;
+    }
+
+    .authorize-btn:hover {
+      background: var(--brass-light);
+      transform: translateY(-1px);
+    }
+
+    /* Right Column: Allocation Summary Folio */
+    .folio-card {
+      background: var(--bg-charcoal);
+      border: 1px solid var(--brass-muted);
+      padding: 2.5rem;
+      position: sticky;
+      top: 6rem;
+      box-shadow: 0 25px 50px rgba(0, 0, 0, 0.75);
+    }
+
+    .folio-header {
+      border-bottom: 1px solid rgba(197, 160, 89, 0.2);
+      padding-bottom: 1.25rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .folio-eyebrow {
+      font-size: 0.6rem;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: var(--brass-primary);
+      display: block;
+      margin-bottom: 0.35rem;
+    }
+
+    .folio-hotel {
+      font-family: var(--font-serif);
+      font-size: 1.5rem;
+      font-weight: 400;
+      color: var(--text-ivory);
+      line-height: 1.25;
+    }
+
+    .folio-city {
+      font-size: 0.68rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--text-ash);
+      margin-top: 0.35rem;
+    }
+
+    .folio-dates {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+      padding: 1.25rem 0;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+      margin-bottom: 1.5rem;
+    }
+
+    .date-block span {
+      display: block;
+      font-size: 0.6rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--text-slate);
+    }
+
+    .date-block strong {
+      font-family: var(--font-serif);
+      font-size: 1.05rem;
+      font-weight: 400;
+      color: var(--text-ivory);
+    }
+
+    .folio-lines {
+      display: flex;
+      flex-direction: column;
+      gap: 0.85rem;
+      padding-bottom: 1.5rem;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      margin-bottom: 1.5rem;
+    }
+
+    .folio-line {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.82rem;
+      color: var(--text-ash);
+    }
+
+    .folio-line.Muted {
+      font-size: 0.75rem;
+      color: var(--text-slate);
+    }
+
+    .folio-total {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      margin-bottom: 2rem;
+    }
+
+    .folio-total-label {
+      font-size: 0.7rem;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--brass-primary);
+    }
+
+    .folio-total-amount {
+      font-family: var(--font-serif);
+      font-size: 1.85rem;
+      color: var(--text-ivory);
+    }
+
+    .folio-total-amount span {
+      font-family: var(--font-sans);
+      font-size: 0.7rem;
+      color: var(--text-ash);
+      letter-spacing: 0.1em;
+    }
+
+    .privileges-box {
+      background: rgba(197, 160, 89, 0.05);
+      border: 1px solid rgba(197, 160, 89, 0.18);
+      padding: 1.25rem;
+    }
+
+    .privileges-title {
+      font-size: 0.62rem;
+      letter-spacing: 0.24em;
+      text-transform: uppercase;
+      color: var(--brass-light);
+      margin-bottom: 0.65rem;
+      display: block;
+    }
+
+    .privileges-list {
+      list-style: none;
+      display: grid;
+      gap: 0.5rem;
+      font-size: 0.75rem;
+      color: var(--text-ash);
+    }
+
+    .privileges-list li::before {
+      content: "◆ ";
+      color: var(--brass-primary);
+      font-size: 0.6rem;
+    }
+
+    /* Footer */
+    footer {
+      background: var(--bg-obsidian);
+      padding: 2.5rem 4rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.68rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      border-top: 1px solid rgba(255, 255, 255, 0.05);
+      position: relative;
+      z-index: 2;
+    }
+
+    .footer-copy {
+      color: var(--brass-primary);
+    }
+
+    .footer-links {
+      display: flex;
+      gap: 2rem;
+      color: var(--text-slate);
+    }
+
+    .footer-links a:hover {
+      color: var(--text-ivory);
+    }
+
+    @media (max-width: 960px) {
+      .settlement-grid {
+        grid-template-columns: 1fr;
+      }
+      .folio-card {
+        position: static;
+      }
+      .form-grid {
+        grid-template-columns: 1fr;
+      }
+      header {
+        padding: 1rem 1.5rem;
+      }
+    }
+  </style>
+
+  <!-- Hard CUG Bouncer: Immediate Client-Side Guardrail -->
+  <script>
+    (function() {
+      const status = localStorage.getItem('guild_status');
+      const key = localStorage.getItem('guild_key');
+      if (status !== 'active' || !key) {
+        window.location.replace('index.html');
+      }
+    })();
+  </script>
+</head>
+<body>
+
+  <!-- Top Navigation -->
+  <header>
+    <a href="index.html" class="brand-mark">
+      <div class="brand-crest"><span>G</span></div>
+      <span class="brand-title">The Guild</span>
+    </a>
+
+    <div class="member-badge-container">
+      <div class="member-pill">
+        <span class="status-dot"></span>
+        <span id="navKeyDisplay">CREDENTIAL: GH-------</span>
+      </div>
+      <a href="results.html" class="nav-back">&larr; Return to The Collection</a>
+    </div>
+  </header>
+
+  <!-- 14:59 Scarcity Hold Ribbon -->
+  <div class="timer-ribbon">
+    Private Allocation Hold Active &mdash; Rate &amp; Inventory Locked For <strong id="holdTimer">14:59</strong>
+  </div>
+
+  <!-- Main Settlement Workspace -->
+  <main>
+    <div class="page-heading">
+      <div>
+        <span class="eyebrow">Private Member Dispatch</span>
+        <h1>The Settlement Ledger</h1>
+      </div>
+      <div class="security-tag">256-Bit Encrypted CUG Settlement</div>
+    </div>
+
+    <form id="settlementForm" onsubmit="handleSettlementSubmit(event)">
+      <div class="settlement-grid">
+        
+        <!-- Left Column: Registration & Payment Instrument -->
+        <div>
+          <!-- Panel I: Guest Dispatch -->
+          <div class="ledger-panel">
+            <div class="panel-header">
+              <div>
+                <span class="panel-step">I.</span>
+                <span class="panel-title">Registered Guest Dispatch</span>
+              </div>
+              <span class="panel-subtitle">Front-Desk Verification</span>
+            </div>
+
+            <div class="form-grid">
+              <div class="form-group full-width">
+                <label class="form-label" for="guestName">Full Legal Name (Must Match Government ID)</label>
+                <input type="text" id="guestName" class="form-input" placeholder="e.g. Alexander Sterling" required />
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="guestEmail">Credential Dispatch Email</label>
+                <input type="email" id="guestEmail" class="form-input" placeholder="name@domain.com" required />
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="guestPhone">Direct Mobile Number</label>
+                <input type="tel" id="guestPhone" class="form-input" placeholder="+1 (___) ___-____" required />
+              </div>
+
+              <div class="form-group full-width">
+                <label class="form-label" for="arrivalNotes">Arrival Window &amp; On-Property Courtesies (Optional)</label>
+                <input type="text" id="arrivalNotes" class="form-input" placeholder="e.g. Late arrival 22:00, quiet wing preference" />
+              </div>
+            </div>
+
+            <div class="protocol-note">
+              <strong>Private Ledger Protocol:</strong> To preserve Closed User Group confidentiality, third-party hotel loyalty numbers are omitted from private net-rate allocations. All stays remain eligible for on-property Guild City Privileges.
+            </div>
+          </div>
+
+          <!-- Panel II: Settlement Instrument -->
+          <div class="ledger-panel">
+            <div class="panel-header">
+              <div>
+                <span class="panel-step">II.</span>
+                <span class="panel-title">Folio Settlement Instrument</span>
+              </div>
+              <span class="panel-subtitle">Direct Authorization</span>
+            </div>
+
+            <div class="form-grid">
+              <div class="form-group full-width">
+                <label class="form-label" for="cardName">Name on Settlement Card</label>
+                <input type="text" id="cardName" class="form-input" placeholder="Cardholder Legal Name" required />
+              </div>
+
+              <div class="form-group full-width">
+                <label class="form-label" for="cardNumber">Card Number</label>
+                <input type="text" id="cardNumber" class="form-input" placeholder="•••• •••• •••• ••••" maxlength="19" oninput="formatCardNumber(this)" required />
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="cardExpiry">Expiration Date</label>
+                <input type="text" id="cardExpiry" class="form-input" placeholder="MM / YY" maxlength="7" required />
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="cardCvv">Security Code (CVV)</label>
+                <input type="password" id="cardCvv" class="form-input" placeholder="•••" maxlength="4" required />
+              </div>
+
+              <div class="form-group full-width">
+                <label class="form-label" for="billingPostal">Billing Postal / ZIP Code</label>
+                <input type="text" id="billingPostal" class="form-input" placeholder="Postal or ZIP Code" required />
+              </div>
+            </div>
+
+            <!-- CUG Legal Fence Checkbox -->
+            <label class="covenant-box">
+              <input type="checkbox" id="cugCovenant" required />
+              <span class="covenant-text">
+                <strong>Closed User Group Covenant:</strong> I confirm my active standing within The Guild private network and accept the confidential member allocation rate, non-disclosure of private ledger pricing, and settlement terms.
+              </span>
+            </label>
+
+            <button type="submit" class="authorize-btn" id="authorizeBtn">
+              Authorize &amp; Lock Allocation
+            </button>
+          </div>
+        </div>
+
+        <!-- Right Column: Private Folio Summary -->
+        <aside class="folio-card">
+          <div class="folio-header">
+            <span class="folio-eyebrow">Allocated Property</span>
+            <h2 class="folio-hotel" id="folioHotelName">The Sheraton Hamilton Core</h2>
+            <div class="folio-city" id="folioCityName">Hamilton Chapter &mdash; Executive Allocation</div>
+          </div>
+
+          <div class="folio-dates">
+            <div class="date-block">
+              <span>Check-In</span>
+              <strong id="folioCheckIn">Nov 04, 2026</strong>
+            </div>
+            <div class="date-block">
+              <span>Check-Out</span>
+              <strong id="folioCheckOut">Nov 07, 2026</strong>
+            </div>
+          </div>
+
+          <div class="folio-lines">
+            <div class="folio-line">
+              <span id="folioRateLabel">Private Ledger Rate ($154 CAD &times; 3 Nights)</span>
+              <span id="folioRoomSubtotal">$462.00 CAD</span>
+            </div>
+            <div class="folio-line">
+              <span>Municipal &amp; Jurisdictional Recovery</span>
+              <span id="folioTaxes">$60.06 CAD</span>
+            </div>
+            <div class="folio-line Muted">
+              <span>City Privileges Dispatch</span>
+              <span>Included</span>
+            </div>
+          </div>
+
+          <div class="folio-total">
+            <span class="folio-total-label">Total Settlement</span>
+            <div class="folio-total-amount" id="folioTotalAmount">$522.06 <span>CAD</span></div>
+          </div>
+
+          <div class="privileges-box">
+            <span class="privileges-title">Attached City Privileges</span>
+            <ul class="privileges-list">
+              <li>Priority seating &amp; chef's tasting courtesy at chapter dining partners</li>
+              <li>Complimentary evening lounge access via Guild Key presentation</li>
+              <li>Direct front-desk dispatch under pre-settled corporate folio</li>
+            </ul>
+          </div>
+        </aside>
+
+      </div>
+    </form>
+  </main>
+
+  <!-- Footer -->
+  <footer>
+    <div class="footer-copy">&copy; 2026 The Guild.</div>
+    <div class="footer-links">
+      <a href="terms.html">Terms of Membership</a>
+      <a href="privacy.html">Privacy</a>
+    </div>
+  </footer>
+
+  <!-- Settlement & Countdown Script -->
+  <script>
+    const NIGHTS = 3;
+    let nightlyRate = 154;
+    let selectedHotel = 'The Sheraton Hamilton Core';
+    let selectedCity = 'Hamilton';
+
+    document.addEventListener('DOMContentLoaded', () => {
+      // Populate Member Key
+      const activeKey = localStorage.getItem('guild_key') || 'GH-84920X';
+      document.getElementById('navKeyDisplay').textContent = `CREDENTIAL: ${activeKey}`;
+
+      // Pre-fill member contact if email or phone was entered in The Registry
+      const savedContact = localStorage.getItem('guild_member_contact') || '';
+      if (savedContact.includes('@')) {
+        document.getElementById('guestEmail').value = savedContact;
+      } else if (savedContact.length > 5) {
+        document.getElementById('guestPhone').value = savedContact;
+      }
+
+      // Load selected property from results.html
+      if (localStorage.getItem('selected_hotel')) {
+        selectedHotel = localStorage.getItem('selected_hotel');
+      }
+      if (localStorage.getItem('selected_rate')) {
+        nightlyRate = parseFloat(localStorage.getItem('selected_rate')) || 154;
+      }
+      if (localStorage.getItem('selected_city')) {
+        selectedCity = localStorage.getItem('selected_city');
+      }
+
+      // Calculate Folio
+      const subtotal = nightlyRate * NIGHTS;
+      const taxes = +(subtotal * 0.13).toFixed(2);
+      const total = +(subtotal + taxes).toFixed(2);
+
+      document.getElementById('folioHotelName').textContent = selectedHotel;
+      document.getElementById('folioCityName').textContent = `${selectedCity} Chapter — Executive Allocation`;
+      document.getElementById('folioRateLabel').textContent = `Private Ledger Rate ($${nightlyRate} CAD × ${NIGHTS} Nights)`;
+      document.getElementById('folioRoomSubtotal').textContent = `$${subtotal.toFixed(2)} CAD`;
+      document.getElementById('folioTaxes').textContent = `$${taxes.toFixed(2)} CAD`;
+      document.getElementById('folioTotalAmount').innerHTML = `$${total.toFixed(2)} <span>CAD</span>`;
+
+      // Start 14:59 Scarcity Timer
+      startHoldTimer(14 * 60 + 59);
+    });
+
+    function startHoldTimer(durationSeconds) {
+      let remaining = durationSeconds;
+      const timerEl = document.getElementById('holdTimer');
+      const interval = setInterval(() => {
+        const mins = Math.floor(remaining / 60);
+        const secs = remaining % 60;
+        timerEl.textContent = `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
+        if (remaining <= 0) {
+          clearInterval(interval);
+          timerEl.textContent = '00:00';
+        }
+        remaining--;
+      }, 1000);
+    }
+
+    function formatCardNumber(input) {
+      const digits = input.value.replace(/\D/g, '').substring(0, 16);
+      const groups = digits.match(/.{1,4}/g);
+      input.value = groups ? groups.join(' ') : '';
+    }
+
+    function handleSettlementSubmit(e) {
+      e.preventDefault();
+      const btn = document.getElementById('authorizeBtn');
+      btn.textContent = 'Authorizing Settlement Ledger...';
+      btn.disabled = true;
+
+      const subtotal = nightlyRate * NIGHTS;
+      const taxes = +(subtotal * 0.13).toFixed(2);
+      const total = +(subtotal + taxes).toFixed(2);
+      const rawCard = document.getElementById('cardNumber').value.replace(/\D/g, '');
+      const last4 = rawCard.slice(-4) || '4829';
+      const folioRef = 'GLD-' + Math.floor(100000 + Math.random() * 900000);
+
+      // Save folio record to localStorage for confirmation.html
+      localStorage.setItem('folio_reference', folioRef);
+      localStorage.setItem('guest_name', document.getElementById('guestName').value.trim());
+      localStorage.setItem('guest_email', document.getElementById('guestEmail').value.trim());
+      localStorage.setItem('guest_phone', document.getElementById('guestPhone').value.trim());
+      localStorage.setItem('arrival_notes', document.getElementById('arrivalNotes').value.trim());
+      localStorage.setItem('folio_subtotal', subtotal.toFixed(2));
+      localStorage.setItem('folio_taxes', taxes.toFixed(2));
+      localStorage.setItem('folio_total', total.toFixed(2));
+      localStorage.setItem('card_last4', last4);
+      localStorage.setItem('settled_timestamp', new Date().toISOString());
+
+      setTimeout(() => {
+        window.location.href = 'confirmation.html';
+      }, 950);
+    }
+  </script>
+</body>
+</html>
