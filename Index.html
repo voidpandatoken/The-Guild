@@ -1,527 +1,900 @@
-```html
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="scroll-smooth">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The Guild | Travel, Unlocked</title>
-    
-    <!-- Google Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&family=Playfair+Display:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
-    
-    <style>
-        /* --- CORE VARIABLES --- */
-        :root {
-            --bg-obsidian: #0a0a0a;
-            --bg-elevated: #141414;
-            --text-white: #ffffff;
-            --text-muted: #888888;
-            --brass: #D4AF37;
-            --brass-dim: rgba(212, 175, 55, 0.3);
-            --font-display: 'Playfair Display', serif;
-            --font-body: 'Inter', sans-serif;
-        }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>THE GUILD — Private Hospitality & City Privileges</title>
+  <meta name="robots" content="noindex, nofollow" />
+  
+  <!-- Google Fonts: Playfair Display & Montserrat -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
 
-        /* --- RESET & BASE --- */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+  <style>
+    :root {
+      --bg-obsidian: #080808;
+      --bg-charcoal: #101010;
+      --bg-panel: #141414;
+      --brass-primary: #c5a059;
+      --brass-light: #dfd2b5;
+      --brass-muted: rgba(197, 160, 89, 0.22);
+      --brass-glow: rgba(197, 160, 89, 0.08);
+      --text-ivory: #f4f1ea;
+      --text-ash: #9a968e;
+      --text-slate: #5c5953;
+      --font-serif: 'Playfair Display', Georgia, serif;
+      --font-sans: 'Montserrat', -apple-system, BlinkMacSystemFont, sans-serif;
+    }
 
-        body {
-            background-color: var(--bg-obsidian);
-            color: var(--text-white);
-            font-family: var(--font-body);
-            line-height: 1.6;
-            -webkit-font-smoothing: antialiased;
-        }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
 
-        h1, h2, h3, h4, .brand-logo {
-            font-family: var(--font-display);
-            font-weight: 400;
-        }
+    body {
+      background-color: var(--bg-obsidian);
+      color: var(--text-ivory);
+      font-family: var(--font-sans);
+      font-weight: 300;
+      line-height: 1.7;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+    }
 
-        a {
-            text-decoration: none;
-            color: var(--brass);
-            transition: color 0.3s ease;
-        }
+    /* Subtle Ambient Texture & Vignette */
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      background: radial-gradient(circle at 50% 0%, rgba(197, 160, 89, 0.07) 0%, transparent 65%);
+      pointer-events: none;
+      z-index: 0;
+    }
 
-        a:hover {
-            color: #fff;
-        }
+    a {
+      color: inherit;
+      text-decoration: none;
+      transition: all 0.3s ease;
+    }
 
-        section {
-            padding: 100px 5%;
-        }
+    /* Top Navigation */
+    header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      z-index: 100;
+      padding: 1.5rem 4rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: linear-gradient(180deg, rgba(8,8,8,0.92) 0%, rgba(8,8,8,0.4) 70%, transparent 100%);
+      backdrop-filter: blur(8px);
+      border-bottom: 1px solid rgba(197, 160, 89, 0.12);
+    }
 
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-        }
+    .brand-mark {
+      display: flex;
+      align-items: center;
+      gap: 0.85rem;
+    }
 
-        /* --- HEADER --- */
-        header {
-            position: absolute;
-            top: 0;
-            width: 100%;
-            padding: 40px 5%;
-            z-index: 10;
-            display: flex;
-            justify-content: center;
-        }
+    .brand-crest {
+      width: 28px;
+      height: 28px;
+      border: 1px solid var(--brass-primary);
+      display: grid;
+      place-items: center;
+      font-family: var(--font-serif);
+      font-size: 0.85rem;
+      color: var(--brass-primary);
+      letter-spacing: 0;
+      transform: rotate(45deg);
+    }
 
-        .brand-logo {
-            font-size: 1.5rem;
-            letter-spacing: 4px;
-            color: var(--brass);
-            text-transform: uppercase;
-        }
+    .brand-crest span {
+      transform: rotate(-45deg);
+      display: block;
+    }
 
-        /* --- 1. THE VELVET ROPE (HERO) --- */
-        .hero {
-            position: relative;
-            height: 100vh;
-            min-height: 600px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
-            padding: 0 20px;
-            overflow: hidden;
-        }
+    .brand-title {
+      font-family: var(--font-serif);
+      font-size: 1.15rem;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: var(--text-ivory);
+    }
 
-        .hero-bg {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            /* Moody dark hotel lobby placeholder */
-            background: url('https://images.unsplash.com/photo-1566665797739-1674de7a421a?auto=format&fit=crop&q=80&w=1920') center/cover no-repeat;
-            z-index: 1;
-        }
+    .nav-links {
+      display: flex;
+      gap: 2.75rem;
+      align-items: center;
+      font-size: 0.72rem;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--text-ash);
+    }
 
-        .hero-overlay {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(to bottom, rgba(10, 10, 10, 0.7), rgba(10, 10, 10, 1));
-            z-index: 2;
-        }
+    .nav-links a:hover {
+      color: var(--brass-primary);
+    }
 
-        .hero-content {
-            position: relative;
-            z-index: 3;
-            max-width: 800px;
-            margin-top: 50px;
-        }
+    .vault-trigger {
+      padding: 0.65rem 1.4rem;
+      border: 1px solid var(--brass-primary);
+      color: var(--brass-primary);
+      font-size: 0.68rem;
+      letter-spacing: 0.24em;
+      text-transform: uppercase;
+      background: rgba(197, 160, 89, 0.04);
+      cursor: pointer;
+      transition: all 0.35s ease;
+    }
 
-        .hero h1 {
-            font-size: clamp(2.5rem, 5vw, 4.5rem);
-            line-height: 1.1;
-            margin-bottom: 20px;
-            color: var(--text-white);
-        }
+    .vault-trigger:hover {
+      background: var(--brass-primary);
+      color: var(--bg-obsidian);
+    }
 
-        .hero p {
-            font-size: 1.1rem;
-            color: var(--text-muted);
-            margin-bottom: 50px;
-            font-weight: 300;
-        }
+    /* Section 1: The Velvet Rope (Hero & The Registry) */
+    .hero {
+      position: relative;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 8rem 2rem 5rem;
+      text-align: center;
+      overflow: hidden;
+    }
 
-        /* The Registry Input */
-        .registry-form {
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-            max-width: 400px;
-            margin: 0 auto;
-        }
+    .hero-backdrop {
+      position: absolute;
+      inset: 0;
+      background-image: 
+        linear-gradient(180deg, rgba(8,8,8,0.82) 0%, rgba(8,8,8,0.68) 45%, rgba(8,8,8,0.98) 100%),
+        url('https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?auto=format&fit=crop&w=2000&q=85');
+      background-size: cover;
+      background-position: center;
+      filter: grayscale(35%) contrast(110%);
+      transform: scale(1.04);
+      animation: slowPan 28s ease-in-out infinite alternate;
+      z-index: -1;
+    }
 
-        .registry-input {
-            background: transparent;
-            border: none;
-            border-bottom: 1px solid var(--brass-dim);
-            padding: 15px 10px;
-            color: var(--text-white);
-            font-family: var(--font-body);
-            font-size: 1rem;
-            text-align: center;
-            transition: border-color 0.3s ease;
-            outline: none;
-        }
+    @keyframes slowPan {
+      0% { transform: scale(1.04) translateY(0); }
+      100% { transform: scale(1.09) translateY(-1.5%); }
+    }
 
-        .registry-input:focus {
-            border-bottom: 1px solid var(--brass);
-        }
+    .hero-container {
+      max-width: 780px;
+      width: 100%;
+      z-index: 2;
+    }
 
-        .registry-input::placeholder {
-            color: #555;
-            letter-spacing: 1px;
-        }
+    .eyebrow {
+      display: inline-block;
+      font-size: 0.68rem;
+      letter-spacing: 0.34em;
+      text-transform: uppercase;
+      color: var(--brass-primary);
+      margin-bottom: 1.5rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 1px solid var(--brass-muted);
+    }
 
-        .btn-brass {
-            background-color: transparent;
-            border: 1px solid var(--brass);
-            color: var(--brass);
-            padding: 15px 30px;
-            font-family: var(--font-body);
-            font-size: 0.9rem;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            cursor: pointer;
-            transition: all 0.4s ease;
-        }
+    .hero h1 {
+      font-family: var(--font-serif);
+      font-weight: 400;
+      font-size: clamp(2.4rem, 5vw, 4.25rem);
+      line-height: 1.15;
+      color: var(--text-ivory);
+      margin-bottom: 1.5rem;
+      letter-spacing: -0.01em;
+    }
 
-        .btn-brass:hover {
-            background-color: var(--brass);
-            color: var(--bg-obsidian);
-        }
+    .hero h1 em {
+      font-style: italic;
+      color: var(--brass-light);
+    }
 
-        /* --- 2. THE THESIS --- */
-        .thesis {
-            background-color: var(--bg-obsidian);
-            border-top: 1px solid #1a1a1a;
-        }
+    .hero-sub {
+      font-size: 0.98rem;
+      color: var(--text-ash);
+      max-width: 580px;
+      margin: 0 auto 3rem;
+      font-weight: 300;
+    }
 
-        .thesis-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 60px;
-            text-align: center;
-        }
+    /* The Registry (Black Box Gate) */
+    .registry-box {
+      background: rgba(16, 16, 16, 0.88);
+      border: 1px solid var(--brass-muted);
+      padding: 2.5rem;
+      max-width: 600px;
+      margin: 0 auto;
+      box-shadow: 0 30px 60px rgba(0, 0, 0, 0.85), 0 0 40px var(--brass-glow);
+      backdrop-filter: blur(16px);
+    }
 
-        .thesis-item h3 {
-            color: var(--brass);
-            font-size: 1.5rem;
-            margin-bottom: 20px;
-        }
+    .registry-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.25rem;
+      padding-bottom: 0.85rem;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    }
 
-        .thesis-item p {
-            color: var(--text-muted);
-            font-size: 0.95rem;
-            font-weight: 300;
-        }
+    .registry-title {
+      font-size: 0.7rem;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: var(--brass-primary);
+    }
 
-        /* --- 3. THE COLLECTION --- */
-        .collection {
-            background-color: var(--bg-elevated);
-        }
+    .registry-status {
+      display: flex;
+      align-items: center;
+      gap: 0.45rem;
+      font-size: 0.65rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--text-ash);
+    }
 
-        .section-header {
-            text-align: center;
-            margin-bottom: 60px;
-        }
+    .status-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background-color: var(--brass-primary);
+      box-shadow: 0 0 8px var(--brass-primary);
+    }
 
-        .section-header h2 {
-            font-size: 2.5rem;
-            margin-bottom: 15px;
-        }
+    .registry-tabs {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.5rem;
+      margin-bottom: 1.25rem;
+    }
 
-        .section-header p {
-            color: var(--text-muted);
-            font-weight: 300;
-        }
+    .tab-btn {
+      background: transparent;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      color: var(--text-ash);
+      padding: 0.65rem;
+      font-family: var(--font-sans);
+      font-size: 0.68rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
 
-        .collection-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 30px;
-            margin-bottom: 50px;
-        }
+    .tab-btn.active {
+      border-color: var(--brass-primary);
+      color: var(--text-ivory);
+      background: rgba(197, 160, 89, 0.08);
+    }
 
-        .card {
-            background-color: var(--bg-obsidian);
-            border: 1px solid #222;
-            overflow: hidden;
-            transition: border-color 0.4s ease;
-        }
+    .registry-form {
+      display: flex;
+      flex-direction: column;
+      gap: 0.9rem;
+    }
 
-        .card:hover {
-            border-color: var(--brass-dim);
-        }
+    .input-group {
+      position: relative;
+      display: flex;
+    }
 
-        .card-image {
-            height: 200px;
-            background-color: #1a1a1a;
-            background-size: cover;
-            background-position: center;
-        }
+    .registry-input {
+      width: 100%;
+      background: var(--bg-obsidian);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      padding: 1.05rem 1.25rem;
+      color: var(--text-ivory);
+      font-family: var(--font-sans);
+      font-size: 0.85rem;
+      letter-spacing: 0.06em;
+      outline: none;
+      transition: border-color 0.3s ease;
+    }
 
-        /* Placeholders */
-        .img-toronto { background-image: url('https://images.unsplash.com/photo-1542931287-023b922fa89b?auto=format&fit=crop&q=80&w=600'); }
-        .img-calgary { background-image: url('https://images.unsplash.com/photo-1600455856402-95f269a9094f?auto=format&fit=crop&q=80&w=600'); }
-        .img-hamilton { background-image: url('https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?auto=format&fit=crop&q=80&w=600'); }
+    .registry-input::placeholder {
+      color: var(--text-slate);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      font-size: 0.72rem;
+    }
 
-        .card-content {
-            padding: 30px;
-            text-align: center;
-        }
+    .registry-input:focus {
+      border-color: var(--brass-primary);
+    }
 
-        .card-content h3 {
-            font-size: 1.3rem;
-            margin-bottom: 5px;
-        }
+    .registry-submit {
+      width: 100%;
+      background: var(--brass-primary);
+      color: var(--bg-obsidian);
+      border: none;
+      padding: 1.1rem;
+      font-family: var(--font-sans);
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.26em;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: all 0.35s ease;
+    }
 
-        .card-content p.location {
-            font-size: 0.8rem;
-            color: var(--text-muted);
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            margin-bottom: 25px;
-        }
+    .registry-submit:hover {
+      background: var(--brass-light);
+      transform: translateY(-1px);
+    }
 
-        .pricing {
-            border-top: 1px solid #222;
-            padding-top: 20px;
-        }
+    .registry-footnote {
+      margin-top: 1.1rem;
+      font-size: 0.68rem;
+      color: var(--text-slate);
+      letter-spacing: 0.08em;
+    }
 
-        .retail-price {
-            color: var(--text-muted);
-            font-size: 0.9rem;
-            text-decoration: line-through;
-            margin-bottom: 5px;
-        }
+    /* Section Dividers */
+    .section-wrap {
+      max-width: 1220px;
+      margin: 0 auto;
+      padding: 7rem 2rem;
+      position: relative;
+      z-index: 2;
+    }
 
-        .locked-price {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            color: var(--brass);
-            font-size: 1.1rem;
-        }
+    .section-header {
+      text-align: center;
+      max-width: 680px;
+      margin: 0 auto 4.5rem;
+    }
 
-        .locked-price svg {
-            width: 14px;
-            height: 14px;
-            fill: var(--brass);
-        }
+    .section-header h2 {
+      font-family: var(--font-serif);
+      font-weight: 400;
+      font-size: clamp(1.85rem, 3.2vw, 2.75rem);
+      color: var(--text-ivory);
+      margin-bottom: 1rem;
+    }
 
-        .blur-effect {
-            filter: blur(4px);
-            user-select: none;
-            opacity: 0.7;
-        }
+    .section-header p {
+      color: var(--text-ash);
+      font-size: 0.92rem;
+    }
 
-        .collection-action {
-            text-align: center;
-        }
+    /* Moniker Pillars Grid */
+    .pillars-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 2rem;
+    }
 
-        /* --- 4. CITY PRIVILEGES --- */
-        .privileges {
-            text-align: center;
-            border-bottom: 1px solid #1a1a1a;
-        }
+    .pillar-card {
+      background: var(--bg-charcoal);
+      border: 1px solid rgba(197, 160, 89, 0.14);
+      padding: 2.75rem 2.25rem;
+      position: relative;
+      transition: all 0.4s ease;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
 
-        .key-icon {
-            margin-bottom: 30px;
-        }
+    .pillar-card:hover {
+      border-color: var(--brass-primary);
+      transform: translateY(-4px);
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.65);
+    }
 
-        .key-icon svg {
-            width: 40px;
-            height: 40px;
-            fill: var(--brass);
-        }
+    .pillar-num {
+      font-family: var(--font-serif);
+      font-style: italic;
+      color: var(--brass-primary);
+      font-size: 0.95rem;
+      margin-bottom: 1.5rem;
+      display: block;
+    }
 
-        .privileges h2 {
-            font-size: 2.5rem;
-            margin-bottom: 20px;
-        }
+    .pillar-moniker {
+      font-size: 0.65rem;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: var(--brass-light);
+      margin-bottom: 0.5rem;
+      display: block;
+    }
 
-        .privileges p {
-            max-width: 600px;
-            margin: 0 auto;
-            color: var(--text-muted);
-            font-size: 1.1rem;
-            font-weight: 300;
-        }
+    .pillar-card h3 {
+      font-family: var(--font-serif);
+      font-weight: 400;
+      font-size: 1.5rem;
+      color: var(--text-ivory);
+      margin-bottom: 1rem;
+    }
 
-        /* --- 5. FOOTER --- */
-        footer {
-            background-color: var(--bg-obsidian);
-            padding: 40px 5%;
-            text-align: center;
-        }
+    .pillar-card p {
+      font-size: 0.86rem;
+      color: var(--text-ash);
+      margin-bottom: 2rem;
+    }
 
-        .footer-content {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 15px;
-        }
+    .pillar-lock {
+      font-size: 0.65rem;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--text-slate);
+      padding-top: 1.25rem;
+      border-top: 1px solid rgba(255, 255, 255, 0.05);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
 
-        .copyright {
-            color: var(--brass);
-            font-family: var(--font-display);
-            font-size: 1.1rem;
-            letter-spacing: 1px;
-        }
+    /* Section 3: The Vault & Digital Key Showcase */
+    .vault-showcase {
+      background: linear-gradient(135deg, #111111 0%, #0a0a0a 100%);
+      border-top: 1px solid var(--brass-muted);
+      border-bottom: 1px solid var(--brass-muted);
+    }
 
-        .legal-links {
-            display: flex;
-            gap: 20px;
-        }
+    .vault-grid {
+      display: grid;
+      grid-template-columns: 1.1fr 0.9fr;
+      gap: 4rem;
+      align-items: center;
+    }
 
-        .legal-links a {
-            color: #555;
-            font-size: 0.8rem;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
+    .vault-copy h2 {
+      font-family: var(--font-serif);
+      font-weight: 400;
+      font-size: clamp(1.9rem, 3vw, 2.6rem);
+      margin-bottom: 1.25rem;
+    }
 
-        .legal-links a:hover {
-            color: var(--text-muted);
-        }
+    .vault-copy p {
+      color: var(--text-ash);
+      font-size: 0.92rem;
+      margin-bottom: 1.5rem;
+    }
 
-        /* Responsive Adjustments */
-        @media (min-width: 768px) {
-            .registry-form {
-                flex-direction: row;
-                max-width: 500px;
-            }
-            .registry-input {
-                flex: 1;
-                text-align: left;
-                padding: 15px 20px;
-            }
-        }
-    </style>
+    .vault-list {
+      list-style: none;
+      margin-top: 2rem;
+      display: grid;
+      gap: 1rem;
+    }
+
+    .vault-list li {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      font-size: 0.82rem;
+      letter-spacing: 0.08em;
+      color: var(--text-ivory);
+    }
+
+    .vault-list li::before {
+      content: "◆";
+      color: var(--brass-primary);
+      font-size: 0.65rem;
+    }
+
+    /* Digital Key Card Visual */
+    .key-card {
+      background: radial-gradient(circle at top right, rgba(197, 160, 89, 0.16), #090909 70%);
+      border: 1px solid var(--brass-primary);
+      padding: 2.5rem;
+      aspect-ratio: 1.58 / 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      position: relative;
+      box-shadow: 0 25px 55px rgba(0,0,0,0.85);
+    }
+
+    .key-card-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+    }
+
+    .key-card-label {
+      font-size: 0.62rem;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--brass-primary);
+    }
+
+    .key-card-chip {
+      width: 38px;
+      height: 28px;
+      border: 1px solid var(--brass-primary);
+      background: rgba(197, 160, 89, 0.15);
+    }
+
+    .key-card-middle {
+      margin: auto 0;
+    }
+
+    .key-code {
+      font-family: monospace;
+      font-size: 1.35rem;
+      letter-spacing: 0.25em;
+      color: var(--text-ivory);
+    }
+
+    .key-sub {
+      font-size: 0.62rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--text-ash);
+      margin-top: 0.35rem;
+    }
+
+    .key-card-bottom {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      font-size: 0.65rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--text-ash);
+    }
+
+    /* Jurisdictions Ribbon */
+    .chapters-bar {
+      text-align: center;
+      padding: 4rem 2rem;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .chapters-label {
+      font-size: 0.65rem;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: var(--text-slate);
+      margin-bottom: 1.75rem;
+      display: block;
+    }
+
+    .chapters-list {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 2.5rem 4rem;
+      font-family: var(--font-serif);
+      font-size: 1.15rem;
+      color: var(--text-ash);
+      letter-spacing: 0.12em;
+    }
+
+    .chapters-list span {
+      transition: color 0.3s ease;
+    }
+
+    .chapters-list span:hover {
+      color: var(--brass-primary);
+    }
+
+    /* Section 5: Ultra-Clean Footer */
+    footer {
+      background: var(--bg-obsidian);
+      padding: 3rem 4rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.7rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+    }
+
+    .footer-copy {
+      color: var(--brass-primary);
+    }
+
+    .footer-links {
+      display: flex;
+      gap: 2.5rem;
+      color: var(--text-slate);
+    }
+
+    .footer-links a:hover {
+      color: var(--text-ivory);
+    }
+
+    /* Responsive Adjustments */
+    @media (max-width: 960px) {
+      header {
+        padding: 1.25rem 1.75rem;
+      }
+      .nav-links {
+        display: none;
+      }
+      .pillars-grid {
+        grid-template-columns: 1fr;
+      }
+      .vault-grid {
+        grid-template-columns: 1fr;
+      }
+      footer {
+        flex-direction: column;
+        gap: 1.25rem;
+        padding: 2.5rem 1.5rem;
+        text-align: center;
+      }
+    }
+  </style>
 </head>
 <body>
 
-    <!-- Header -->
-    <header>
-        <div class="brand-logo">The Guild</div>
-    </header>
+  <!-- Top Navigation -->
+  <header>
+    <a href="#" class="brand-mark">
+      <div class="brand-crest"><span>G</span></div>
+      <span class="brand-title">The Guild</span>
+    </a>
 
-    <!-- 1. The Velvet Rope (Hero) -->
-    <section class="hero">
-        <div class="hero-bg"></div>
-        <div class="hero-overlay"></div>
-        
-        <div class="hero-content">
-            <h1>The True Cost of Hospitality, Revealed.</h1>
-            <p>Access Canada's only closed-network travel collective. Wholesale rates, zero public markups.</p>
-            
-            <form class="registry-form" onsubmit="event.preventDefault();">
-                <input type="email" class="registry-input" placeholder="Enter email to access The Registry" required>
-                <button type="submit" class="btn-brass">Unlock The Guild</button>
-            </form>
+    <nav class="nav-links">
+      <a href="#collection">The Collection</a>
+      <a href="#privileges">City Privileges</a>
+      <a href="#assembly">The Assembly</a>
+      <a href="#vault">The Vault</a>
+    </nav>
+
+    <button class="vault-trigger" onclick="focusRegistry()">Enter The Registry</button>
+  </header>
+
+  <!-- Section 1: The Velvet Rope (Hero & Black Box Gateway) -->
+  <section class="hero">
+    <div class="hero-backdrop"></div>
+    <div class="hero-container">
+      <span class="eyebrow">Private Hospitality &amp; Culinary Collective</span>
+      <h1>Access Is the Only <em>Currency.</em></h1>
+      <p class="hero-sub">
+        An invitation-only network curating private accommodation allocations, corporate commissioning, and dining privileges across premier North American jurisdictions.
+      </p>
+
+      <!-- The Registry Gate -->
+      <div class="registry-box" id="registry">
+        <div class="registry-header">
+          <span class="registry-title">The Registry</span>
+          <span class="registry-status">
+            <span class="status-dot"></span>Encrypted CUG Portal
+          </span>
         </div>
-    </section>
 
-    <!-- 2. The Thesis -->
-    <section class="thesis container">
-        <div class="thesis-grid">
-            <div class="thesis-item">
-                <h3>The Market</h3>
-                <p>Traditional booking engines and public travel sites inflate room rates by up to 30% to cover massive advertising budgets and retail margins.</p>
-            </div>
-            <div class="thesis-item">
-                <h3>The Model</h3>
-                <p>We bypass the retail ecosystem entirely, securing direct B2B wholesale feeds and negotiating opaque net rates exclusively for our network.</p>
-            </div>
-            <div class="thesis-item">
-                <h3>The Rule</h3>
-                <p>To protect our supplier agreements and ensure our rates remain untouched, our collection is strictly gated. You must be a member to see the price.</p>
-            </div>
+        <div class="registry-tabs">
+          <button type="button" class="tab-btn active" id="tab-credential" onclick="switchTab('credential')">
+            Member / Founding Pass
+          </button>
+          <button type="button" class="tab-btn" id="tab-key" onclick="switchTab('key')">
+            Guild Key (GH-XXXXXX)
+          </button>
         </div>
-    </section>
 
-    <!-- 3. The Collection -->
-    <section class="collection">
-        <div class="container">
-            <div class="section-header">
-                <h2>The Collection</h2>
-                <p>A glimpse into our current wholesale portfolio.</p>
-            </div>
-            
-            <div class="collection-grid">
-                <!-- Card 1 -->
-                <div class="card">
-                    <div class="card-image img-toronto"></div>
-                    <div class="card-content">
-                        <h3>Executive King Suite</h3>
-                        <p class="location">Toronto, ON</p>
-                        <div class="pricing">
-                            <div class="retail-price">Public Retail: $319 CAD</div>
-                            <div class="locked-price">
-                                <!-- Lock SVG Icon -->
-                                <svg viewBox="0 0 24 24"><path d="M18 10v-4c0-3.313-2.687-6-6-6s-6 2.687-6 6v4h-3v14h18v-14h-3zm-10-4c0-2.206 1.794-4 4-4s4 1.794 4 4v4h-8v-4z"/></svg>
-                                <span>Member Rate: <span class="blur-effect">$195</span></span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+        <form class="registry-form" id="guildGateForm" onsubmit="handleRegistrySubmit(event)">
+          <div class="input-group">
+            <input 
+              type="text" 
+              id="registryInput" 
+              class="registry-input" 
+              placeholder="Enter Corporate Email or Mobile Number" 
+              required 
+              autocomplete="off"
+            />
+          </div>
+          <button type="submit" class="registry-submit" id="registrySubmitBtn">
+            Authenticate &amp; Enter The Collection
+          </button>
+        </form>
 
-                <!-- Card 2 -->
-                <div class="card">
-                    <div class="card-image img-calgary"></div>
-                    <div class="card-content">
-                        <h3>Premium Downtown</h3>
-                        <p class="location">Calgary, AB</p>
-                        <div class="pricing">
-                            <div class="retail-price">Public Retail: $245 CAD</div>
-                            <div class="locked-price">
-                                <svg viewBox="0 0 24 24"><path d="M18 10v-4c0-3.313-2.687-6-6-6s-6 2.687-6 6v4h-3v14h18v-14h-3zm-10-4c0-2.206 1.794-4 4-4s4 1.794 4 4v4h-8v-4z"/></svg>
-                                <span>Member Rate: <span class="blur-effect">$145</span></span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+        <p class="registry-footnote" id="registryNotice">
+          Unauthenticated visitors cannot view property allocations or private ledger rates.
+        </p>
+      </div>
+    </div>
+  </section>
 
-                <!-- Card 3 -->
-                <div class="card">
-                    <div class="card-image img-hamilton"></div>
-                    <div class="card-content">
-                        <h3>Boutique Standard</h3>
-                        <p class="location">Hamilton, ON</p>
-                        <div class="pricing">
-                            <div class="retail-price">Public Retail: $180 CAD</div>
-                            <div class="locked-price">
-                                <svg viewBox="0 0 24 24"><path d="M18 10v-4c0-3.313-2.687-6-6-6s-6 2.687-6 6v4h-3v14h18v-14h-3zm-10-4c0-2.206 1.794-4 4-4s4 1.794 4 4v4h-8v-4z"/></svg>
-                                <span>Member Rate: <span class="blur-effect">$110</span></span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+  <!-- Active Jurisdictions Ribbon -->
+  <div class="chapters-bar">
+    <span class="chapters-label">Active Canadian Jurisdictions</span>
+    <div class="chapters-list">
+      <span>TORONTO</span>
+      <span>VANCOUVER</span>
+      <span>CALGARY</span>
+      <span>HAMILTON</span>
+      <span>MONTREAL</span>
+      <span>OTTAWA</span>
+    </div>
+  </div>
 
-            <div class="collection-action">
-                <button class="btn-brass" onclick="window.scrollTo({top: 0, behavior: 'smooth'})">Enter The Registry to Reveal</button>
-            </div>
+  <!-- Section 2: The Moniker Pillars (Zero Public Pricing) -->
+  <section class="section-wrap" id="collection">
+    <div class="section-header">
+      <span class="eyebrow">The Architecture</span>
+      <h2>Three Pillars of Private Access</h2>
+      <p>
+        The Guild operates strictly behind closed doors. Our allocations and local partner agreements are never indexed on public search engines.
+      </p>
+    </div>
+
+    <div class="pillars-grid">
+      <!-- Pillar I: The Collection -->
+      <div class="pillar-card">
+        <div>
+          <span class="pillar-num">I.</span>
+          <span class="pillar-moniker">The Collection</span>
+          <h3>Private Accommodations</h3>
+          <p>
+            Direct access to unadvertised room allocations across boutique properties and executive hotels. Reserved exclusively for verified credential holders.
+          </p>
         </div>
-    </section>
-
-    <!-- 4. City Privileges -->
-    <section class="privileges container">
-        <div class="key-icon">
-            <!-- Key SVG Icon -->
-            <svg viewBox="0 0 24 24"><path d="M7 14c-3.86 0-7-3.14-7-7s3.14-7 7-7 7 3.14 7 7c0 1.625-.558 3.125-1.493 4.295l7.493 7.705h-4v3h-4v-3h-2l-1.393-1.428c-1.077.587-2.302.928-3.607.928zm0-10c-1.657 0-3 1.343-3 3s1.343 3 3 3 3-1.343 3-3-1.343-3-3-3z"/></svg>
+        <div class="pillar-lock">
+          <span>Ledger Status</span>
+          <span style="color: var(--brass-primary);">Requires Authentication</span>
         </div>
-        <h2>City Privileges</h2>
-        <p>Your digital key (GH-XXXXXX) unlocks more than just rooms. Gain exclusive access and preferred treatment at Canada's finest independent restaurants and local partners.</p>
-    </section>
+      </div>
 
-    <!-- 5. Footer -->
-    <footer>
-        <div class="footer-content container">
-            <div class="copyright">&copy; 2026 Hotbeds Inc.</div>
-            <div class="legal-links">
-                <a href="#">Terms of Membership</a>
-                <a href="#">Privacy</a>
+      <!-- Pillar II: City Privileges -->
+      <div class="pillar-card" id="privileges">
+        <div>
+          <span class="pillar-num">II.</span>
+          <span class="pillar-moniker">City Privileges</span>
+          <h3>The Inner Circle</h3>
+          <p>
+            Complimentary chef tastings, priority seating, and preferred transit courtesies at independent culinary institutions in every chapter city.
+          </p>
+        </div>
+        <div class="pillar-lock">
+          <span>Partner Network</span>
+          <span style="color: var(--brass-primary);">Key Holders Only</span>
+        </div>
+      </div>
+
+      <!-- Pillar III: The Assembly -->
+      <div class="pillar-card" id="assembly">
+        <div>
+          <span class="pillar-num">III.</span>
+          <span class="pillar-moniker">The Assembly</span>
+          <h3>Executive &amp; Crew Blocks</h3>
+          <p>
+            Bespoke multi-room commissioning for touring rosters, project task forces, and corporate delegations requiring frictionless check-in protocols.
+          </p>
+        </div>
+        <div class="pillar-lock">
+          <span>Desk Dispatch</span>
+          <span style="color: var(--brass-primary);">Direct Allocation</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Section 3: The Vault (Digital Credential Showcase) -->
+  <section class="vault-showcase" id="vault">
+    <div class="section-wrap">
+      <div class="vault-grid">
+        <div class="vault-copy">
+          <span class="eyebrow">The Vault</span>
+          <h2>Your Digital Credential</h2>
+          <p>
+            Upon verification in The Registry, members are issued an encrypted Guild Key. Your key acts as both your private booking token and your on-property credential at participating culinary partners.
+          </p>
+          <ul class="vault-list">
+            <li>Instant unlocking of private member ledger accommodations</li>
+            <li>On-premise recognition across partner dining rooms &amp; lounges</li>
+            <li>Consolidated itinerary &amp; folio management inside The Vault</li>
+          </ul>
+        </div>
+
+        <div class="key-card">
+          <div class="key-card-top">
+            <div>
+              <div class="key-card-label">The Guild — Member Credential</div>
+              <div style="font-family: var(--font-serif); font-size: 1.1rem; margin-top: 0.25rem;">Founding Charter</div>
             </div>
-        </div>
-    </footer>
+            <div class="key-card-chip"></div>
+          </div>
 
+          <div class="key-card-middle">
+            <div class="key-code" id="previewKeyCode">GH-84920X</div>
+            <div class="key-sub">Verified Closed User Group Token</div>
+          </div>
+
+          <div class="key-card-bottom">
+            <span>Status: Active</span>
+            <span>North America</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Section 5: Minimalist Corporate Footer -->
+  <footer>
+    <div class="footer-copy">&copy; 2026 Hotbeds Inc.</div>
+    <div class="footer-links">
+      <a href="terms.html">Terms of Membership</a>
+      <a href="privacy.html">Privacy</a>
+    </div>
+  </footer>
+
+  <!-- CUG Gate & Session Wiring -->
+  <script>
+    let currentMode = 'credential';
+
+    function switchTab(mode) {
+      currentMode = mode;
+      const tabCredential = document.getElementById('tab-credential');
+      const tabKey = document.getElementById('tab-key');
+      const input = document.getElementById('registryInput');
+      const btn = document.getElementById('registrySubmitBtn');
+
+      if (mode === 'key') {
+        tabKey.classList.add('active');
+        tabCredential.classList.remove('active');
+        input.placeholder = 'Enter Your Guild Key (e.g. GH-482910)';
+        btn.textContent = 'Unlock The Vault';
+      } else {
+        tabCredential.classList.add('active');
+        tabKey.classList.remove('active');
+        input.placeholder = 'Enter Corporate Email or Mobile Number';
+        btn.textContent = 'Authenticate & Enter The Collection';
+      }
+    }
+
+    function focusRegistry() {
+      const input = document.getElementById('registryInput');
+      document.getElementById('registry').scrollIntoView({ behavior: 'smooth', block: 'center' });
+      setTimeout(() => input.focus(), 450);
+    }
+
+    function generateGuildKey() {
+      const chars = '23456789ABCDEFGHJKLMNPQRSTUVWXYZ';
+      let result = 'GH-';
+      for (let i = 0; i < 6; i++) {
+        result += chars.charAt(Math.floor(Math.random() * chars.length));
+      }
+      return result;
+    }
+
+    function handleRegistrySubmit(e) {
+      e.preventDefault();
+      const rawValue = document.getElementById('registryInput').value.trim();
+      if (!rawValue) return;
+
+      const notice = document.getElementById('registryNotice');
+      const btn = document.getElementById('registrySubmitBtn');
+
+      // Generate or preserve Guild Key
+      const existingKey = localStorage.getItem('guild_key');
+      const assignedKey = (currentMode === 'key' && rawValue.toUpperCase().startsWith('GH-'))
+        ? rawValue.toUpperCase()
+        : (existingKey || generateGuildKey());
+
+      // Persist Closed User Group (CUG) session state for results.html & checkout.html
+      localStorage.setItem('guild_status', 'active');
+      localStorage.setItem('guild_member_contact', rawValue);
+      localStorage.setItem('guild_key', assignedKey);
+      localStorage.setItem('booking_source', 'The Guild');
+
+      // Visual feedback before redirect
+      document.getElementById('previewKeyCode').textContent = assignedKey;
+      btn.textContent = 'Credential Verified — Entering...';
+      notice.style.color = '#c5a059';
+      notice.textContent = `Guild Key ${assignedKey} authenticated. Redirecting to The Collection...`;
+
+      setTimeout(() => {
+        window.location.href = 'results.html';
+      }, 900);
+    }
+  </script>
 </body>
 </html>
-```
