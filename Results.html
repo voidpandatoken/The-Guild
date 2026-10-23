@@ -1,3 +1,585 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>THE COLLECTION — The Guild Ledger</title>
+  <meta name="robots" content="noindex, nofollow" />
+  
+  <!-- Google Fonts: Playfair Display & Montserrat -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --bg-obsidian: #080808;
+      --bg-charcoal: #101010;
+      --bg-panel: #141414;
+      --brass-primary: #c5a059;
+      --brass-light: #dfd2b5;
+      --brass-muted: rgba(197, 160, 89, 0.22);
+      --brass-glow: rgba(197, 160, 89, 0.08);
+      --text-ivory: #f4f1ea;
+      --text-ash: #9a968e;
+      --text-slate: #5c5953;
+      --font-serif: 'Playfair Display', Georgia, serif;
+      --font-sans: 'Montserrat', -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--bg-obsidian);
+      color: var(--text-ivory);
+      font-family: var(--font-sans);
+      font-weight: 300;
+      line-height: 1.7;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+      transition: all 0.3s ease;
+    }
+
+    /* Top Navigation */
+    header {
+      position: sticky;
+      top: 0;
+      left: 0;
+      width: 100%;
+      z-index: 100;
+      padding: 1.25rem 3rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: rgba(8, 8, 8, 0.95);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid rgba(197, 160, 89, 0.15);
+    }
+
+    .brand-mark {
+      display: flex;
+      align-items: center;
+      gap: 0.85rem;
+    }
+
+    .brand-crest {
+      width: 24px;
+      height: 24px;
+      border: 1px solid var(--brass-primary);
+      display: grid;
+      place-items: center;
+      font-family: var(--font-serif);
+      font-size: 0.75rem;
+      color: var(--brass-primary);
+      transform: rotate(45deg);
+    }
+
+    .brand-crest span {
+      transform: rotate(-45deg);
+      display: block;
+    }
+
+    .brand-title {
+      font-family: var(--font-serif);
+      font-size: 1rem;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: var(--text-ivory);
+    }
+
+    .member-badge-container {
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+    }
+
+    .member-pill {
+      background: rgba(197, 160, 89, 0.08);
+      border: 1px solid var(--brass-muted);
+      padding: 0.45rem 1rem;
+      font-size: 0.65rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--brass-light);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .status-dot {
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background-color: var(--brass-primary);
+      box-shadow: 0 0 6px var(--brass-primary);
+    }
+
+    .nav-exit {
+      font-size: 0.65rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--text-ash);
+    }
+
+    .nav-exit:hover {
+      color: var(--brass-primary);
+    }
+
+    /* Main Container */
+    main {
+      flex: 1;
+      max-width: 1200px;
+      width: 100%;
+      margin: 0 auto;
+      padding: 3rem 2rem 5rem;
+    }
+
+    /* Search & Filter Bar */
+    .ledger-control-bar {
+      background: var(--bg-charcoal);
+      border: 1px solid rgba(197, 160, 89, 0.18);
+      padding: 1.75rem;
+      margin-bottom: 3rem;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr) auto;
+      gap: 1.25rem;
+      align-items: end;
+    }
+
+    .control-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.45rem;
+    }
+
+    .control-label {
+      font-size: 0.62rem;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--brass-primary);
+    }
+
+    .control-input, .control-select {
+      background: var(--bg-obsidian);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      color: var(--text-ivory);
+      padding: 0.8rem 1rem;
+      font-family: var(--font-sans);
+      font-size: 0.8rem;
+      outline: none;
+      transition: border-color 0.3s ease;
+    }
+
+    .control-input:focus, .control-select:focus {
+      border-color: var(--brass-primary);
+    }
+
+    .control-btn {
+      background: var(--brass-primary);
+      color: var(--bg-obsidian);
+      border: none;
+      padding: 0.85rem 1.75rem;
+      font-family: var(--font-sans);
+      font-size: 0.72rem;
+      font-weight: 600;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: background 0.3s ease;
+      height: 100%;
+    }
+
+    .control-btn:hover {
+      background: var(--brass-light);
+    }
+
+    /* Ledger Results Header */
+    .ledger-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      margin-bottom: 2rem;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      padding-bottom: 1rem;
+    }
+
+    .ledger-title {
+      font-family: var(--font-serif);
+      font-weight: 400;
+      font-size: 1.8rem;
+      color: var(--text-ivory);
+    }
+
+    .ledger-count {
+      font-size: 0.7rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--text-ash);
+    }
+
+    /* Property Cards Grid */
+    .properties-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 2.25rem;
+    }
+
+    .property-card {
+      background: var(--bg-charcoal);
+      border: 1px solid rgba(197, 160, 89, 0.15);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      transition: transform 0.3s ease, border-color 0.3s ease;
+    }
+
+    .property-card:hover {
+      border-color: var(--brass-primary);
+      transform: translateY(-3px);
+      box-shadow: 0 15px 35px rgba(0,0,0,0.6);
+    }
+
+    .property-image-wrap {
+      position: relative;
+      height: 240px;
+      overflow: hidden;
+    }
+
+    .property-image-wrap img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      filter: grayscale(20%) contrast(105%);
+      transition: transform 0.6s ease;
+    }
+
+    .property-card:hover .property-image-wrap img {
+      transform: scale(1.03);
+    }
+
+    .property-tag {
+      position: absolute;
+      top: 1rem;
+      left: 1rem;
+      background: rgba(8, 8, 8, 0.88);
+      border: 1px solid var(--brass-muted);
+      padding: 0.35rem 0.85rem;
+      font-size: 0.6rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--brass-light);
+    }
+
+    .property-body {
+      padding: 2rem;
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+      justify-content: space-between;
+    }
+
+    .property-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 0.75rem;
+    }
+
+    .property-name {
+      font-family: var(--font-serif);
+      font-size: 1.4rem;
+      font-weight: 400;
+      color: var(--text-ivory);
+    }
+
+    .property-location {
+      font-size: 0.7rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--text-ash);
+      margin-bottom: 1.25rem;
+    }
+
+    .perk-pill {
+      background: rgba(197, 160, 89, 0.05);
+      border-left: 2px solid var(--brass-primary);
+      padding: 0.65rem 1rem;
+      font-size: 0.75rem;
+      color: var(--text-ash);
+      margin-bottom: 1.75rem;
+    }
+
+    .property-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      padding-top: 1.25rem;
+      border-top: 1px solid rgba(255, 255, 255, 0.06);
+    }
+
+    .pricing-block {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .public-strike {
+      font-size: 0.75rem;
+      color: var(--text-slate);
+      text-decoration: line-through;
+      letter-spacing: 0.05em;
+    }
+
+    .ledger-price {
+      font-family: var(--font-serif);
+      font-size: 1.5rem;
+      color: var(--brass-light);
+    }
+
+    .ledger-price span {
+      font-size: 0.7rem;
+      font-family: var(--font-sans);
+      color: var(--text-ash);
+      letter-spacing: 0.1em;
+    }
+
+    .lock-allocation-btn {
+      background: transparent;
+      border: 1px solid var(--brass-primary);
+      color: var(--brass-primary);
+      padding: 0.75rem 1.4rem;
+      font-family: var(--font-sans);
+      font-size: 0.68rem;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .lock-allocation-btn:hover {
+      background: var(--brass-primary);
+      color: var(--bg-obsidian);
+    }
+
+    /* Footer */
+    footer {
+      background: var(--bg-obsidian);
+      padding: 2.5rem 4rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.68rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      border-top: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .footer-copy {
+      color: var(--brass-primary);
+    }
+
+    .footer-links {
+      display: flex;
+      gap: 2rem;
+      color: var(--text-slate);
+    }
+
+    .footer-links a:hover {
+      color: var(--text-ivory);
+    }
+
+    @media (max-width: 960px) {
+      .ledger-control-bar {
+        grid-template-columns: 1fr;
+      }
+      .properties-grid {
+        grid-template-columns: 1fr;
+      }
+      header {
+        padding: 1rem 1.5rem;
+      }
+    }
+  </style>
+
+  <!-- Hard CUG Bouncer: Immediate Client-Side Guardrail -->
+  <script>
+    (function() {
+      const status = localStorage.getItem('guild_status');
+      const key = localStorage.getItem('guild_key');
+      if (status !== 'active' || !key) {
+        window.location.replace('index.html');
+      }
+    })();
+  </script>
+</head>
+<body>
+
+  <!-- Top Navigation -->
+  <header>
+    <a href="index.html" class="brand-mark">
+      <div class="brand-crest"><span>G</span></div>
+      <span class="brand-title">The Guild</span>
+    </a>
+
+    <div class="member-badge-container">
+      <div class="member-pill">
+        <span class="status-dot"></span>
+        <span id="navKeyDisplay">CREDENTIAL: GH-------</span>
+      </div>
+      <a href="index.html" class="nav-exit" onclick="localStorage.clear()">Exit Vault</a>
+    </div>
+  </header>
+
+  <!-- Main Ledger Area -->
+  <main>
+    <!-- Filter & Control Bar -->
+    <div class="ledger-control-bar">
+      <div class="control-group">
+        <span class="control-label">Chapter Jurisdiction</span>
+        <select class="control-select" id="citySelect">
+          <option value="hamilton">Hamilton, ON</option>
+          <option value="toronto">Toronto, ON</option>
+          <option value="vancouver">Vancouver, BC</option>
+          <option value="calgary">Calgary, AB</option>
+        </select>
+      </div>
+
+      <div class="control-group">
+        <span class="control-label">Check-In</span>
+        <input type="date" class="control-input" id="checkInDate" value="2026-11-04" />
+      </div>
+
+      <div class="control-group">
+        <span class="control-label">Check-Out</span>
+        <input type="date" class="control-input" id="checkOutDate" value="2026-11-07" />
+      </div>
+
+      <div class="control-group">
+        <span class="control-label">Allocation Type</span>
+        <select class="control-select" id="roomType">
+          <option value="executive">Executive Suite / King</option>
+          <option value="assembly">Assembly / Crew Block (5+)</option>
+        </select>
+      </div>
+
+      <button type="button" class="control-btn" onclick="filterLedger()">Refresh Ledger</button>
+    </div>
+
+    <!-- Ledger Header -->
+    <div class="ledger-header">
+      <h1 class="ledger-title">Private Member Allocations</h1>
+      <span class="ledger-count" id="ledgerCount">4 Properties Available in Hamilton</span>
+    </div>
+
+    <!-- Properties Grid -->
+    <div class="properties-grid">
+      
+      <!-- Property 1 -->
+      <div class="property-card" data-city="hamilton">
+        <div class="property-image-wrap">
+          <img src="https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=1000&q=80" alt="Hotel Interior" />
+          <span class="property-tag">Boutique Executive</span>
+        </div>
+        <div class="property-body">
+          <div>
+            <div class="property-meta">
+              <h3 class="property-name">The Sheraton Hamilton Core</h3>
+            </div>
+            <div class="property-location">Downtown Chapter — Hamilton, ON</div>
+            <div class="perk-pill">
+              ◆ <strong>City Privileges:</strong> Includes complimentary tasting menu at The Mule &amp; priority lounge access.
+            </div>
+          </div>
+          <div class="property-footer">
+            <div class="pricing-block">
+              <span class="public-strike">Public Rate: $245 / night</span>
+              <div class="ledger-price">$154 <span>CAD / night</span></div>
+            </div>
+            <button class="lock-allocation-btn" onclick="selectProperty('The Sheraton Hamilton Core', 154, 'Hamilton')">
+              Lock Allocation
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Property 2 -->
+      <div class="property-card" data-city="hamilton">
+        <div class="property-image-wrap">
+          <img src="https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?auto=format&fit=crop&w=1000&q=80" alt="Hotel Suite" />
+          <span class="property-tag">Private Wing Allocation</span>
+        </div>
+        <div class="property-body">
+          <div>
+            <div class="property-meta">
+              <h3 class="property-name">Homewood Suites by Hilton</h3>
+            </div>
+            <div class="property-location">Waterfront District — Hamilton, ON</div>
+            <div class="perk-pill">
+              ◆ <strong>City Privileges:</strong> Private secure underground parking &amp; evening reception access included.
+            </div>
+          </div>
+          <div class="property-footer">
+            <div class="pricing-block">
+              <span class="public-strike">Public Rate: $280 / night</span>
+              <div class="ledger-price">$168 <span>CAD / night</span></div>
+            </div>
+            <button class="lock-allocation-btn" onclick="selectProperty('Homewood Suites by Hilton', 168, 'Hamilton')">
+              Lock Allocation
+            </button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer>
+    <div class="footer-copy">&copy; 2026 The Guild.</div>
+    <div class="footer-links">
+      <a href="terms.html">Terms of Membership</a>
+      <a href="privacy.html">Privacy</a>
+    </div>
+  </footer>
+
+  <!-- Ledger Logic Script -->
+  <script>
+    // Populate Member Badge on load
+    document.addEventListener('DOMContentLoaded', () => {
+      const activeKey = localStorage.getItem('guild_key') || 'GH-84920X';
+      document.getElementById('navKeyDisplay').textContent = `CREDENTIAL: ${activeKey}`;
+    });
+
+    function filterLedger() {
+      const city = document.getElementById('citySelect').value;
+      const countEl = document.getElementById('ledgerCount');
+      if (city === 'hamilton') {
+        countEl.textContent = '4 Properties Available in Hamilton';
+      } else {
+        countEl.textContent = `2 Private Allocations Available in ${city.toUpperCase()}`;
+      }
+    }
+
+    function selectProperty(hotelName, netRate, city) {
+      localStorage.setItem('selected_hotel', hotelName);
+      localStorage.setItem('selected_rate', netRate);
+      localStorage.setItem('selected_city', city);
+      
+      // Redirect to Checkout (where 14:59 scarcity timer & Guild opt-in box live)
+      window.location.href = 'checkout.html';
+    }
+  </script>
+</body>
+</html>
 
 <!DOCTYPE html>
 <html lang="en" class="scroll-smooth">
