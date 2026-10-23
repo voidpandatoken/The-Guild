@@ -11,6 +11,9 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
 
+  <!-- Supabase JS v2 CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
   <style>
     :root {
       --bg-obsidian: #080808;
@@ -70,7 +73,7 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      background: linear-gradient(180deg, rgba(8,8,8,0.92) 0%, rgba(8,8,8,0.4) 70%, transparent 100%);
+      background: linear-gradient(180deg, rgba(8,8,8,0.95) 0%, rgba(8,8,8,0.6) 75%, transparent 100%);
       backdrop-filter: blur(8px);
       border-bottom: 1px solid rgba(197, 160, 89, 0.12);
     }
@@ -109,7 +112,7 @@
 
     .nav-links {
       display: flex;
-      gap: 2.75rem;
+      gap: 2.5rem;
       align-items: center;
       font-size: 0.72rem;
       letter-spacing: 0.22em;
@@ -254,6 +257,19 @@
       box-shadow: 0 0 8px var(--brass-primary);
     }
 
+    .selected-offer-banner {
+      display: none;
+      background: rgba(197, 160, 89, 0.1);
+      border: 1px solid var(--brass-primary);
+      padding: 0.65rem 1rem;
+      margin-bottom: 1.15rem;
+      font-size: 0.7rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--brass-light);
+      text-align: left;
+    }
+
     .registry-tabs {
       display: grid;
       grid-template-columns: 1fr 1fr;
@@ -342,19 +358,56 @@
       letter-spacing: 0.08em;
     }
 
-    /* Section Dividers */
+    /* Jurisdictions Ribbon */
+    .chapters-bar {
+      text-align: center;
+      padding: 4rem 2rem;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      position: relative;
+      z-index: 2;
+    }
+
+    .chapters-label {
+      font-size: 0.65rem;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: var(--text-slate);
+      margin-bottom: 1.75rem;
+      display: block;
+    }
+
+    .chapters-list {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 2.5rem 4rem;
+      font-family: var(--font-serif);
+      font-size: 1.15rem;
+      color: var(--text-ash);
+      letter-spacing: 0.12em;
+    }
+
+    .chapters-list span {
+      transition: color 0.3s ease;
+    }
+
+    .chapters-list span:hover {
+      color: var(--brass-primary);
+    }
+
+    /* Section Containers */
     .section-wrap {
       max-width: 1220px;
       margin: 0 auto;
-      padding: 7rem 2rem;
+      padding: 6.5rem 2rem;
       position: relative;
       z-index: 2;
     }
 
     .section-header {
       text-align: center;
-      max-width: 680px;
-      margin: 0 auto 4.5rem;
+      max-width: 700px;
+      margin: 0 auto 4rem;
     }
 
     .section-header h2 {
@@ -368,6 +421,177 @@
     .section-header p {
       color: var(--text-ash);
       font-size: 0.92rem;
+    }
+
+    /* Featured Corporate Allocations Grid */
+    .featured-section {
+      border-bottom: 1px solid rgba(197, 160, 89, 0.14);
+      background: linear-gradient(180deg, rgba(16,16,16,0.4) 0%, rgba(8,8,8,0.9) 100%);
+    }
+
+    .featured-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 2rem;
+    }
+
+    .featured-card {
+      background: var(--bg-charcoal);
+      border: 1px solid rgba(197, 160, 89, 0.18);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      transition: all 0.35s ease;
+    }
+
+    .featured-card:hover {
+      border-color: var(--brass-primary);
+      transform: translateY(-4px);
+      box-shadow: 0 22px 45px rgba(0, 0, 0, 0.75);
+    }
+
+    .featured-img-wrap {
+      position: relative;
+      height: 215px;
+      overflow: hidden;
+    }
+
+    .featured-img-wrap img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      filter: grayscale(25%) contrast(108%);
+      transition: transform 0.6s ease;
+    }
+
+    .featured-card:hover .featured-img-wrap img {
+      transform: scale(1.04);
+    }
+
+    .rate-type-badge {
+      position: absolute;
+      top: 1rem;
+      left: 1rem;
+      background: rgba(8, 8, 8, 0.92);
+      border: 1px solid var(--brass-primary);
+      padding: 0.35rem 0.75rem;
+      font-size: 0.58rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--brass-light);
+      font-weight: 500;
+    }
+
+    .rate-type-badge.seasonal {
+      border-color: rgba(255, 255, 255, 0.25);
+      color: var(--text-ash);
+    }
+
+    .featured-body {
+      padding: 2rem 1.85rem;
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+      justify-content: space-between;
+    }
+
+    .featured-chapter {
+      font-size: 0.64rem;
+      letter-spacing: 0.24em;
+      text-transform: uppercase;
+      color: var(--brass-primary);
+      margin-bottom: 0.35rem;
+      display: block;
+    }
+
+    .featured-title {
+      font-family: var(--font-serif);
+      font-size: 1.38rem;
+      font-weight: 400;
+      color: var(--text-ivory);
+      margin-bottom: 0.85rem;
+    }
+
+    .multi-night-callout {
+      background: rgba(197, 160, 89, 0.06);
+      border-left: 2px solid var(--brass-primary);
+      padding: 0.6rem 0.85rem;
+      font-size: 0.73rem;
+      color: var(--text-ash);
+      margin-bottom: 1.5rem;
+    }
+
+    .multi-night-callout strong {
+      color: var(--brass-light);
+      font-weight: 500;
+    }
+
+    .ratio-box {
+      background: var(--bg-obsidian);
+      border: 1px solid rgba(255, 255, 255, 0.07);
+      padding: 1.1rem 1.15rem;
+      margin-bottom: 1.35rem;
+    }
+
+    .ratio-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      font-size: 0.74rem;
+      color: var(--text-slate);
+      margin-bottom: 0.45rem;
+    }
+
+    .ratio-strike {
+      text-decoration: line-through;
+      color: var(--text-ash);
+    }
+
+    .ratio-guild-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      padding-top: 0.5rem;
+      border-top: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .ratio-guild-label {
+      font-size: 0.65rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--brass-primary);
+    }
+
+    .ratio-guild-price {
+      font-family: var(--font-serif);
+      font-size: 1.45rem;
+      color: var(--text-ivory);
+    }
+
+    .ratio-guild-price span {
+      font-family: var(--font-sans);
+      font-size: 0.65rem;
+      color: var(--text-ash);
+      letter-spacing: 0.08em;
+    }
+
+    .claim-featured-btn {
+      width: 100%;
+      background: transparent;
+      border: 1px solid var(--brass-primary);
+      color: var(--brass-primary);
+      padding: 0.85rem 1rem;
+      font-family: var(--font-sans);
+      font-size: 0.68rem;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .claim-featured-btn:hover {
+      background: var(--brass-primary);
+      color: var(--bg-obsidian);
     }
 
     /* Moniker Pillars Grid */
@@ -549,42 +773,7 @@
       color: var(--text-ash);
     }
 
-    /* Jurisdictions Ribbon */
-    .chapters-bar {
-      text-align: center;
-      padding: 4rem 2rem;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-    }
-
-    .chapters-label {
-      font-size: 0.65rem;
-      letter-spacing: 0.32em;
-      text-transform: uppercase;
-      color: var(--text-slate);
-      margin-bottom: 1.75rem;
-      display: block;
-    }
-
-    .chapters-list {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 2.5rem 4rem;
-      font-family: var(--font-serif);
-      font-size: 1.15rem;
-      color: var(--text-ash);
-      letter-spacing: 0.12em;
-    }
-
-    .chapters-list span {
-      transition: color 0.3s ease;
-    }
-
-    .chapters-list span:hover {
-      color: var(--brass-primary);
-    }
-
-    /* Section 5: Ultra-Clean Footer */
+    /* Minimalist Corporate Footer */
     footer {
       background: var(--bg-obsidian);
       padding: 3rem 4rem;
@@ -610,7 +799,6 @@
       color: var(--text-ivory);
     }
 
-    /* Responsive Adjustments */
     @media (max-width: 960px) {
       header {
         padding: 1.25rem 1.75rem;
@@ -618,9 +806,8 @@
       .nav-links {
         display: none;
       }
-      .pillars-grid {
-        grid-template-columns: 1fr;
-      }
+      .featured-grid,
+      .pillars-grid,
       .vault-grid {
         grid-template-columns: 1fr;
       }
@@ -643,6 +830,7 @@
     </a>
 
     <nav class="nav-links">
+      <a href="#featured">Featured Allocations</a>
       <a href="#collection">The Collection</a>
       <a href="#privileges">City Privileges</a>
       <a href="#assembly">The Assembly</a>
@@ -659,7 +847,7 @@
       <span class="eyebrow">Private Hospitality &amp; Culinary Collective</span>
       <h1>Access Is the Only <em>Currency.</em></h1>
       <p class="hero-sub">
-        An invitation-only network curating private accommodation allocations, corporate commissioning, and dining privileges across premier North American jurisdictions.
+        An invitation-only network curating contracted corporate accommodation allocations, multi-night executive blocks, and dining privileges across premier North American jurisdictions.
       </p>
 
       <!-- The Registry Gate -->
@@ -671,9 +859,11 @@
           </span>
         </div>
 
+        <div class="selected-offer-banner" id="selectedOfferBanner"></div>
+
         <div class="registry-tabs">
           <button type="button" class="tab-btn active" id="tab-credential" onclick="switchTab('credential')">
-            Member / Founding Pass
+            Member / Corporate Dispatch
           </button>
           <button type="button" class="tab-btn" id="tab-key" onclick="switchTab('key')">
             Guild Key (GH-XXXXXX)
@@ -697,7 +887,7 @@
         </form>
 
         <p class="registry-footnote" id="registryNotice">
-          Unauthenticated visitors cannot view property allocations or private ledger rates.
+          Authenticate your credential to unlock live OTA rate comparisons and contracted corporate ledger inventory.
         </p>
       </div>
     </div>
@@ -716,13 +906,130 @@
     </div>
   </div>
 
-  <!-- Section 2: The Moniker Pillars (Zero Public Pricing) -->
+  <!-- Featured Corporate Allocations Showcase -->
+  <section class="featured-section" id="featured">
+    <div class="section-wrap">
+      <div class="section-header">
+        <span class="eyebrow">Contracted Inventory</span>
+        <h2>Featured Corporate Allocations</h2>
+        <p>
+          Fixed annual corporate agreements are prioritized across chapter jurisdictions, insulating verified members from seasonal retail rate surges.
+        </p>
+      </div>
+
+      <div class="featured-grid">
+        <!-- Featured Offer 1: Fixed Corporate Benchmark ($289.99 vs $195.00) -->
+        <article class="featured-card">
+          <div class="featured-img-wrap">
+            <img src="https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=1000&q=80" alt="The Sheraton Hamilton Core" />
+            <span class="rate-type-badge">Fixed Annual Corporate Allocation</span>
+          </div>
+          <div class="featured-body">
+            <div>
+              <span class="featured-chapter">Hamilton Chapter • Downtown Core</span>
+              <h3 class="featured-title">The Sheraton Hamilton Core</h3>
+              <div class="multi-night-callout">
+                ◆ <strong>Multi-Night Leverage:</strong> 3+ night allocations unlock additional corporate tier savings plus complimentary tasting menu at The Mule.
+              </div>
+            </div>
+
+            <div>
+              <div class="ratio-box">
+                <div class="ratio-row">
+                  <span>Public Market Benchmark (Expedia/BAR)</span>
+                  <span class="ratio-strike">$289.99 CAD</span>
+                </div>
+                <div class="ratio-guild-row">
+                  <span class="ratio-guild-label">Guild Corporate Rate</span>
+                  <div class="ratio-guild-price">$195.00 <span>+ tax / night</span></div>
+                </div>
+              </div>
+
+              <button type="button" class="claim-featured-btn" onclick="claimFeaturedOffer('The Sheraton Hamilton Core', 195.00, 'Hamilton')">
+                Claim Featured Allocation
+              </button>
+            </div>
+          </div>
+        </article>
+
+        <!-- Featured Offer 2: Fixed Corporate -->
+        <article class="featured-card">
+          <div class="featured-img-wrap">
+            <img src="https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?auto=format&fit=crop&w=1000&q=80" alt="Homewood Suites Waterfront" />
+            <span class="rate-type-badge">Fixed Annual Corporate Allocation</span>
+          </div>
+          <div class="featured-body">
+            <div>
+              <span class="featured-chapter">Hamilton Chapter • Waterfront District</span>
+              <h3 class="featured-title">Homewood Suites by Hilton</h3>
+              <div class="multi-night-callout">
+                ◆ <strong>Multi-Night Leverage:</strong> Extended-stay suite configuration with secure underground parking &amp; evening reception courtesies.
+              </div>
+            </div>
+
+            <div>
+              <div class="ratio-box">
+                <div class="ratio-row">
+                  <span>Public Market Benchmark (Expedia/BAR)</span>
+                  <span class="ratio-strike">$280.00 CAD</span>
+                </div>
+                <div class="ratio-guild-row">
+                  <span class="ratio-guild-label">Guild Corporate Rate</span>
+                  <div class="ratio-guild-price">$168.00 <span>+ tax / night</span></div>
+                </div>
+              </div>
+
+              <button type="button" class="claim-featured-btn" onclick="claimFeaturedOffer('Homewood Suites by Hilton', 168.00, 'Hamilton')">
+                Claim Featured Allocation
+              </button>
+            </div>
+          </div>
+        </article>
+
+        <!-- Featured Offer 3: Seasonal Corporate Ratio -->
+        <article class="featured-card">
+          <div class="featured-img-wrap">
+            <img src="https://images.unsplash.com/photo-1551882547-ff40c63fe5fa?auto=format&fit=crop&w=1000&q=80" alt="Toronto Financial Core Suite" />
+            <span class="rate-type-badge seasonal">Dynamic Corporate Ledger</span>
+          </div>
+          <div class="featured-body">
+            <div>
+              <span class="featured-chapter">Toronto Chapter • Financial District</span>
+              <h3 class="featured-title">Financial Core Executive Tower</h3>
+              <div class="multi-night-callout">
+                ◆ <strong>Multi-Night Leverage:</strong> Calibrated to our corporate CUG ratio with priority sommelier seating at partner dining rooms.
+              </div>
+            </div>
+
+            <div>
+              <div class="ratio-box">
+                <div class="ratio-row">
+                  <span>Public Market Benchmark (Expedia/BAR)</span>
+                  <span class="ratio-strike">$349.99 CAD</span>
+                </div>
+                <div class="ratio-guild-row">
+                  <span class="ratio-guild-label">Guild Corporate Rate</span>
+                  <div class="ratio-guild-price">$235.00 <span>+ tax / night</span></div>
+                </div>
+              </div>
+
+              <button type="button" class="claim-featured-btn" onclick="claimFeaturedOffer('Financial Core Executive Tower', 235.00, 'Toronto')">
+                Claim Featured Allocation
+              </button>
+            </div>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- Section 2: The Moniker Pillars -->
   <section class="section-wrap" id="collection">
     <div class="section-header">
       <span class="eyebrow">The Architecture</span>
       <h2>Three Pillars of Private Access</h2>
       <p>
-        The Guild operates strictly behind closed doors. Our allocations and local partner agreements are never indexed on public search engines.
+        The Guild operates strictly behind closed doors. Our corporate rate contracts and local partner agreements are never indexed on public search engines.
       </p>
     </div>
 
@@ -734,7 +1041,7 @@
           <span class="pillar-moniker">The Collection</span>
           <h3>Private Accommodations</h3>
           <p>
-            Direct access to unadvertised room allocations across boutique properties and executive hotels. Reserved exclusively for verified credential holders.
+            Direct access to fixed corporate room allocations and dynamic CUG inventory across boutique properties and executive hotels.
           </p>
         </div>
         <div class="pillar-lock">
@@ -788,7 +1095,7 @@
             Upon verification in The Registry, members are issued an encrypted Guild Key. Your key acts as both your private booking token and your on-property credential at participating culinary partners.
           </p>
           <ul class="vault-list">
-            <li>Instant unlocking of private member ledger accommodations</li>
+            <li>Instant unlocking of live OTA comparison feeds &amp; corporate rates</li>
             <li>On-premise recognition across partner dining rooms &amp; lounges</li>
             <li>Consolidated itinerary &amp; folio management inside The Vault</li>
           </ul>
@@ -798,7 +1105,7 @@
           <div class="key-card-top">
             <div>
               <div class="key-card-label">The Guild — Member Credential</div>
-              <div style="font-family: var(--font-serif); font-size: 1.1rem; margin-top: 0.25rem;">Founding Charter</div>
+              <div style="font-family: var(--font-serif); font-size: 1.1rem; margin-top: 0.25rem;">Private Charter</div>
             </div>
             <div class="key-card-chip"></div>
           </div>
@@ -819,15 +1126,23 @@
 
   <!-- Section 5: Minimalist Corporate Footer -->
   <footer>
-    <div class="footer-copy">&copy; 2026 Hotbeds Inc.</div>
+    <div class="footer-copy">&copy; 2026 The Guild.</div>
     <div class="footer-links">
       <a href="terms.html">Terms of Membership</a>
       <a href="privacy.html">Privacy</a>
     </div>
   </footer>
 
-  <!-- CUG Gate & Session Wiring -->
+  <!-- CUG Gate, Featured Offer Preloader & Supabase Wiring -->
   <script>
+    const SUPABASE_URL = 'https://YOUR_PROJECT_ID.supabase.co';
+    const SUPABASE_PUBLISHABLE_KEY = 'sb_publishable_YOUR_KEY_HERE';
+    let supabaseClient = null;
+
+    if (window.supabase && SUPABASE_URL.startsWith('https://') && !SUPABASE_URL.includes('YOUR_PROJECT_ID')) {
+      supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY);
+    }
+
     let currentMode = 'credential';
 
     function switchTab(mode) {
@@ -856,6 +1171,24 @@
       setTimeout(() => input.focus(), 450);
     }
 
+    function claimFeaturedOffer(hotelName, guildRate, city) {
+      localStorage.setItem('selected_hotel', hotelName);
+      localStorage.setItem('selected_rate', guildRate);
+      localStorage.setItem('selected_city', city);
+
+      // If already authenticated in this session, go straight to results.html
+      if (localStorage.getItem('guild_status') === 'active' && localStorage.getItem('guild_key')) {
+        window.location.href = 'results.html';
+        return;
+      }
+
+      // Otherwise pre-load into The Registry banner and scroll up to authenticate
+      const banner = document.getElementById('selectedOfferBanner');
+      banner.style.display = 'block';
+      banner.innerHTML = `◆ <strong>Queued Allocation:</strong> ${hotelName} ($${guildRate.toFixed(2)} CAD/night) — Authenticate below to proceed.`;
+      focusRegistry();
+    }
+
     function generateGuildKey() {
       const chars = '23456789ABCDEFGHJKLMNPQRSTUVWXYZ';
       let result = 'GH-';
@@ -865,7 +1198,7 @@
       return result;
     }
 
-    function handleRegistrySubmit(e) {
+    async function handleRegistrySubmit(e) {
       e.preventDefault();
       const rawValue = document.getElementById('registryInput').value.trim();
       if (!rawValue) return;
@@ -873,7 +1206,6 @@
       const notice = document.getElementById('registryNotice');
       const btn = document.getElementById('registrySubmitBtn');
 
-      // Generate or preserve Guild Key
       const existingKey = localStorage.getItem('guild_key');
       const assignedKey = (currentMode === 'key' && rawValue.toUpperCase().startsWith('GH-'))
         ? rawValue.toUpperCase()
@@ -885,7 +1217,21 @@
       localStorage.setItem('guild_key', assignedKey);
       localStorage.setItem('booking_source', 'The Guild');
 
-      // Visual feedback before redirect
+      // Log to Supabase member_leads if configured
+      if (supabaseClient) {
+        const isEmail = rawValue.includes('@');
+        await supabaseClient.from('member_leads').insert([{
+          email: isEmail ? rawValue.toLowerCase() : null,
+          phone: !isEmail ? rawValue : null,
+          brand_source: 'The Guild',
+          signup_funnel: 'guild_registry',
+          used_20pct_guild_discount: false,
+          sms_verified: true,
+          guild_key: assignedKey,
+          city_interest: localStorage.getItem('selected_city') || 'Hamilton'
+        }]);
+      }
+
       document.getElementById('previewKeyCode').textContent = assignedKey;
       btn.textContent = 'Credential Verified — Entering...';
       notice.style.color = '#c5a059';
@@ -893,7 +1239,7 @@
 
       setTimeout(() => {
         window.location.href = 'results.html';
-      }, 900);
+      }, 850);
     }
   </script>
 </body>
