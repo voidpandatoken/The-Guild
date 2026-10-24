@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>THE GUILD | Private Enterprise & Hospitality Alliance</title>
-  <meta name="description" content="A private closed-user-group alliance connecting hard-working business owners and consumers. Preferred hotel rates active now." />
+  <title>THE GUILD | Private Enterprise & Community Alliance</title>
+  <meta name="description" content="A private alliance connecting hard-working business owners and consumers across Canada." />
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -36,7 +36,7 @@
     h1, h2, h3, .serif { font-family: 'Playfair Display', Georgia, serif; }
     .container { max-width: 1220px; margin: 0 auto; padding: 0 24px; }
 
-    /* Mature Header & Dropdown Submenus */
+    /* Header & Dropdown Submenus */
     .navbar {
       position: sticky; top: 0; z-index: 1000;
       background: rgba(6, 8, 13, 0.92);
@@ -120,7 +120,7 @@
     .section-hdr h2 { font-size: clamp(1.85rem, 3.2vw, 2.65rem); margin-bottom: 12px; }
     .section-hdr p { color: var(--text-muted); font-size: 1rem; }
 
-    /* Live Hotel Division Flagship Card */
+    /* Flagship Division Card (Discreet & Protected) */
     .flagship-card {
       background: linear-gradient(145deg, rgba(19, 28, 46, 0.95), rgba(10, 14, 23, 0.98));
       border: 2px solid var(--gold);
@@ -138,15 +138,15 @@
     .flagship-card h3 { font-size: 2rem; margin-bottom: 14px; }
     .flagship-card p { color: var(--text-muted); margin-bottom: 24px; font-size: 1rem; }
     .feature-list { list-style: none; display: grid; gap: 12px; margin-bottom: 28px; }
-    .feature-list li { display: flex; align-items: center; gap: 10px; font-size: 0.92rem; color: #e2e8f0; }
-    .feature-list span { color: var(--gold); font-weight: 800; }
+    .feature-list li { display: flex; align-items: center; gap: 12px; font-size: 0.94rem; color: #e2e8f0; }
+    .check-icon { color: var(--gold); font-weight: 800; flex-shrink: 0; }
     .rate-panel {
       background: rgba(6, 8, 13, 0.85); border: 1px solid var(--gold-border);
       border-radius: 14px; padding: 28px;
     }
-    .rate-stat { border-bottom: 1px solid var(--border-subtle); padding: 14px 0; display: flex; justify-content: space-between; align-items: center; }
+    .rate-stat { border-bottom: 1px solid var(--border-subtle); padding: 14px 0; display: flex; justify-content: space-between; align-items: center; font-size: 0.9rem; }
     .rate-stat:last-child { border-bottom: none; }
-    .rate-stat strong { color: var(--gold-light); font-size: 1.1rem; }
+    .rate-stat strong { color: var(--gold-light); font-size: 0.98rem; }
 
     /* Blotted-Out / Blurred Divisions Grid */
     .blurred-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px; }
@@ -220,18 +220,18 @@
 
       <ul class="nav-menu">
         <li class="nav-item">
-          <a href="#hotel-division" class="nav-link">Hospitality &amp; Stays &#9662;</a>
+          <a href="#hospitality-division" class="nav-link">Hospitality &amp; Stays &#9662;</a>
           <div class="dropdown">
-            <a href="#hotel-division">Preferred Hotel Rates <span class="tag-live">LIVE</span></a>
-            <a href="#hotel-division">Corporate &amp; Crew Blocks <span class="tag-live">LIVE</span></a>
-            <a href="perks.html#live-hotels">Corridor Rate Breakdown <span class="tag-live">LIVE</span></a>
+            <a href="#hospitality-division">Member Hospitality Desk <span class="tag-live">ACTIVE</span></a>
+            <a href="#hospitality-division">Commercial &amp; Team Lodging <span class="tag-live">ACTIVE</span></a>
+            <a href="perks.html#live-hospitality">Hospitality Privileges <span class="tag-live">ACTIVE</span></a>
           </div>
         </li>
         <li class="nav-item">
           <a href="perks.html" class="nav-link">Member Perks &#9662;</a>
           <div class="dropdown">
-            <a href="perks.html#live-hotels">Hotel Rate Privileges <span class="tag-live">LIVE</span></a>
-            <a href="perks.html#upcoming-perks">Independent Dining <span class="tag-soon">SOON</span></a>
+            <a href="perks.html#live-hospitality">Hospitality Access <span class="tag-live">ACTIVE</span></a>
+            <a href="perks.html#upcoming-perks">Culinary &amp; Dining <span class="tag-soon">SOON</span></a>
             <a href="perks.html#upcoming-perks">Executive Transit <span class="tag-soon">SOON</span></a>
             <a href="perks.html#upcoming-perks">Recovery &amp; Valet <span class="tag-soon">SOON</span></a>
           </div>
@@ -239,10 +239,10 @@
         <li class="nav-item">
           <a href="#staged-divisions" class="nav-link">Alliance Divisions &#9662;</a>
           <div class="dropdown">
-            <a href="#staged-divisions">Shared Workspaces <span class="tag-soon">PHASE 2</span></a>
-            <a href="#staged-divisions">Free Legal Intake <span class="tag-soon">PHASE 2</span></a>
-            <a href="#staged-divisions">B2B Purchasing Co-Op <span class="tag-soon">PHASE 2</span></a>
-            <a href="#staged-divisions">Community Scaling Grants <span class="tag-soon">PHASE 2</span></a>
+            <a href="#staged-divisions">Shared Workspaces <span class="tag-soon">COMING SOON</span></a>
+            <a href="#staged-divisions">Legal Intake Network <span class="tag-soon">COMING SOON</span></a>
+            <a href="#staged-divisions">B2B Co-Op Alliance <span class="tag-soon">COMING SOON</span></a>
+            <a href="#staged-divisions">Community Scaling Grants <span class="tag-soon">COMING SOON</span></a>
           </div>
         </li>
         <li class="nav-item">
@@ -259,66 +259,66 @@
     </div>
   </header>
 
-  <!-- HERO SECTION (ZERO PRICE MENTION) -->
+  <!-- HERO SECTION (ZERO PRICE OR MODEL EXPOSURE) -->
   <section class="hero">
     <div class="container">
-      <div class="eyebrow">PRIVATE CLOSED-USER-GROUP ALLIANCE &bull; CANADIAN CORRIDOR</div>
+      <div class="eyebrow">THE COLLABORATIVE ECONOMIC ENGINE &bull; COMMUNITY SERVING COMMUNITY</div>
       <h1>Where Hard-Working Business Owners Meet Hard-Working Consumers.</h1>
-      <p class="hero-subtitle">One Private Network. Institutional Purchasing Leverage.</p>
+      <p class="hero-subtitle">One Private Network. Unmatched Local Power.</p>
       <p class="hero-desc">
-        The Guild is a self-contained economic alliance engineered to keep capital, hospitality access, and purchasing power within our verified member network. Our flagship <strong>Preferred Hotel &amp; Hospitality Rate Engine</strong> is active now, with additional corporate and community divisions staged for phase-two release.
+        Step inside a self-sustaining alliance built to keep opportunity, loyalty, and utility within our own community. Our <strong>Member Hospitality &amp; Accommodation Desk</strong> is active now, while our additional corporate and community divisions remain sealed during staged partner onboarding.
       </p>
       <div class="btn-row">
-        <a href="#access-portal" class="btn-gold">Unlock Preferred Hotel Rates &rarr;</a>
-        <a href="perks.html" class="btn-outline">Explore Member Perks Preview</a>
+        <a href="#access-portal" class="btn-gold">Request Your Member Key &rarr;</a>
+        <a href="perks.html" class="btn-outline">Explore Member Privileges</a>
       </div>
     </div>
   </section>
 
-  <!-- DIVISION SHOWCASE: 1 LIVE + 4 BLOTTED OUT -->
-  <section id="hotel-division" class="section">
+  <!-- DIVISION SHOWCASE: 1 ACTIVE + 4 BLOTTED OUT -->
+  <section id="hospitality-division" class="section">
     <div class="container">
       <div class="section-hdr">
-        <span class="section-eyebrow">Alliance Infrastructure</span>
-        <h2>Active Flagship &amp; Staged Divisions</h2>
-        <p>Hospitality rate privileges are live for verified members today. Additional alliance pillars remain sealed during partner onboarding.</p>
+        <span class="section-eyebrow">Alliance Divisions</span>
+        <h2>Active Flagship &amp; Staged Services</h2>
+        <p>Hospitality access is live for credentialed members today. Additional alliance pillars are sealed behind coming-soon protocols.</p>
       </div>
 
-      <!-- LIVE DIVISION 01: HOTEL RATES -->
+      <!-- ACTIVE DIVISION 01: PRIVATE HOSPITALITY DESK (NO MODEL EXPOSURE) -->
       <div class="flagship-card">
         <div class="live-pill"><span class="pulse-dot"></span> Division 01 &bull; Active Flagship Service</div>
         <div class="flagship-grid">
           <div>
-            <h3>Preferred Hotel &amp; Hospitality Rates</h3>
+            <h3>Private Member Hospitality &amp; Stays</h3>
             <p>
-              Bypass inflated public booking engines. Verified Guild members receive direct Closed-User-Group (CUG) access to wholesale-tier hotel rates, corporate room blocks, and priority check-in privileges across major Canadian travel corridors.
+              Credentialed Guild members enjoy direct access to our private hospitality desk for business travel, regional team accommodations, and personal stays across participating Canadian properties.
             </p>
             <ul class="feature-list">
-              <li><span>&#10003;</span> Private CUG rates 15%–35% below standard public rack pricing</li>
-              <li><span>&#10003;</span> Direct-to-property reservations for business travel, crews, and leisure stays</li>
-              <li><span>&#10003;</span> Dedicated priority desk for multi-room corporate and regional bookings</li>
+              <li><span class="check-icon">&#10003;</span><span>Dedicated member reservation privileges across participating hotels</span></li>
+              <li><span class="check-icon">&#10003;</span><span>Coordinated accommodations for business travel, project teams, and leisure</span></li>
+              <li><span class="check-icon">&#10003;</span><span>Direct member support desk for regional and multi-room arrangements</span></li>
             </ul>
             <div class="btn-row" style="justify-content: flex-start;">
-              <a href="#access-portal" class="btn-gold">Claim Your Hotel Rate Key &rarr;</a>
-              <a href="perks.html#live-hotels" class="btn-outline">View Rate Mechanics</a>
+              <a href="#access-portal" class="btn-gold">Request Hospitality Access &rarr;</a>
+              <a href="perks.html#live-hospitality" class="btn-outline">View Member Privileges</a>
             </div>
           </div>
 
           <div class="rate-panel">
             <div style="font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.14em; color: var(--gold); font-weight: 700; margin-bottom: 10px;">
-              Live Member Rate Corridor
+              Member Hospitality Desk
             </div>
             <div class="rate-stat">
-              <span>Rate Classification</span>
-              <strong>Closed-User-Group (CUG)</strong>
+              <span>Access Protocol</span>
+              <strong>Verified Member Key</strong>
             </div>
             <div class="rate-stat">
-              <span>Member Savings Tier</span>
-              <strong>15% – 35% Preferred</strong>
+              <span>Coverage Footprint</span>
+              <strong>Canadian Travel Corridors</strong>
             </div>
             <div class="rate-stat">
-              <span>Booking Eligibility</span>
-              <strong>Individual &amp; Corporate</strong>
+              <span>Reservation Scope</span>
+              <strong>Individual &amp; Commercial</strong>
             </div>
             <div class="rate-stat">
               <span>Division Status</span>
@@ -330,71 +330,67 @@
 
       <!-- 4 BLOTTED-OUT / BLURRED DIVISIONS -->
       <div id="staged-divisions" class="blurred-grid">
-        <!-- Blurred 1 -->
         <div class="locked-card">
           <div class="blurred-content">
             <h4>Corporate &amp; Shared Workspace Network</h4>
-            <p>On-demand executive boardrooms, private meeting suites, and regional work hubs across partner properties.</p>
+            <p>On-demand executive boardrooms, private meeting suites, and regional work hubs across partner locations.</p>
             <ul>
-              <li>• Hourly and full-day executive boardroom reservations</li>
-              <li>• Presentation suites and private member event spaces</li>
+              <li>• Executive boardroom and meeting space access</li>
+              <li>• Private member showcase and event venues</li>
             </ul>
           </div>
           <div class="lock-overlay">
-            <span class="lock-badge">Blotted Out &bull; Coming Soon</span>
+            <span class="lock-badge">Coming Soon</span>
             <div class="lock-title">Corporate &amp; Workspace Network</div>
-            <p class="lock-sub">Executive boardrooms and collaborative work hubs are currently in Phase 2 partner verification.</p>
+            <p class="lock-sub">Shared executive boardrooms and collaborative work hubs are currently in partner verification.</p>
           </div>
         </div>
 
-        <!-- Blurred 2 -->
         <div class="locked-card">
           <div class="blurred-content">
             <h4>Professional Services &amp; Free Legal Intake</h4>
-            <p>Direct access to vetted legal counsel, contract review, and corporate accounting specialists.</p>
+            <p>Direct access to vetted legal counsel, contract guidance, and administrative specialists.</p>
             <ul>
               <li>• Complimentary initial legal intake consultations</li>
-              <li>• Billing, reconciliation, and tax advisory routing</li>
+              <li>• Administrative and accounting referral network</li>
             </ul>
           </div>
           <div class="lock-overlay">
-            <span class="lock-badge">Blotted Out &bull; Coming Soon</span>
+            <span class="lock-badge">Coming Soon</span>
             <div class="lock-title">Legal Intake &amp; Advisory Network</div>
-            <p class="lock-sub">Complimentary legal intake and professional referral routing will unlock following charter completion.</p>
+            <p class="lock-sub">Complimentary legal intake and professional referral routing will unlock in the next cohort.</p>
           </div>
         </div>
 
-        <!-- Blurred 3 -->
         <div class="locked-card">
           <div class="blurred-content">
-            <h4>Co-Op Group Purchasing &amp; B2B Marketplace</h4>
-            <p>Pool purchasing volume with fellow independent owners to secure wholesale vendor and processing rates.</p>
+            <h4>Co-Op Purchasing &amp; B2B Alliance</h4>
+            <p>Collaborative business network connecting independent owners for mutual supply and service strength.</p>
             <ul>
-              <li>• Group bargaining on commercial insurance and supplies</li>
-              <li>• Member-to-member B2B trade and hiring directory</li>
+              <li>• Shared vendor relationships and operational resources</li>
+              <li>• Member-to-member B2B trade and hiring board</li>
             </ul>
           </div>
           <div class="lock-overlay">
-            <span class="lock-badge">Blotted Out &bull; Coming Soon</span>
+            <span class="lock-badge">Coming Soon</span>
             <div class="lock-title">Co-Op Purchasing &amp; B2B Trade</div>
-            <p class="lock-sub">Collective vendor contracts and B2B marketplace access are sealed during initial cohort enrollment.</p>
+            <p class="lock-sub">B2B alliance directories and group vendor access are sealed during initial enrollment.</p>
           </div>
         </div>
 
-        <!-- Blurred 4 -->
         <div class="locked-card">
           <div class="blurred-content">
             <h4>Green Energy, Philanthropy &amp; Startup Scaling</h4>
-            <p>Community-backed founder micro-grants, commercial solar transitions, and regional reinvestment.</p>
+            <p>Community-backed founder micro-grants, clean energy transitions, and local reinvestment.</p>
             <ul>
-              <li>• Early-stage business incubation and scaling grants</li>
-              <li>• Clean energy infrastructure partnerships</li>
+              <li>• Early-stage business incubation and scaling support</li>
+              <li>• Regional green infrastructure initiatives</li>
             </ul>
           </div>
           <div class="lock-overlay">
-            <span class="lock-badge">Blotted Out &bull; Coming Soon</span>
+            <span class="lock-badge">Coming Soon</span>
             <div class="lock-title">Startup Scaling &amp; Green Initiatives</div>
-            <p class="lock-sub">Micro-grant allocation and green infrastructure programs launch in upcoming alliance quarters.</p>
+            <p class="lock-sub">Micro-grant allocation and green community programs launch in upcoming alliance quarters.</p>
           </div>
         </div>
       </div>
@@ -405,9 +401,9 @@
   <section id="access-portal" class="section">
     <div class="container">
       <div class="section-hdr" style="margin-bottom: 36px;">
-        <span class="section-eyebrow">Step 1 &bull; Credential Registration</span>
-        <h2>Enter The Guild Hub &amp; Hotel Rate Dossier</h2>
-        <p>Register your credentials below to unlock the inner Guild directory subsection, member reviews, and charter terms.</p>
+        <span class="section-eyebrow">Step 1 &bull; Member Verification</span>
+        <h2>Request Your Guild Member Dossier</h2>
+        <p>Register your details below to enter the inner Guild Hub, explore directory categories, and review the membership charter.</p>
       </div>
 
       <div class="portal-box">
@@ -424,10 +420,10 @@
           </div>
           <div class="field">
             <label for="emailAddr">Email Address</label>
-            <input type="email" id="emailAddr" placeholder="you@company.com" required />
+            <input type="email" id="emailAddr" placeholder="you@domain.com" required />
           </div>
           <button type="submit" id="submitBtn" class="btn-gold" style="width: 100%; margin-top: 6px;">
-            Proceed to Inner Guild Hub &rarr;
+            Enter The Guild Hub &rarr;
           </button>
           <div id="statusBox" class="status-msg"></div>
         </form>
@@ -440,7 +436,7 @@
       <div class="brand-title" style="justify-content: center; margin-bottom: 6px;">
         <span class="brand-diamond"></span> THE GUILD
       </div>
-      <p>Private Closed-User-Group Alliance &bull; All Traffic Remains Strictly Inside The Guild</p>
+      <p>Community Serving Community &bull; Private Member Ecosystem</p>
       <div class="footer-nav">
         <a href="index.html">Home</a>
         <a href="perks.html">Member Perks</a>
@@ -501,7 +497,7 @@
         status.textContent = 'Notice: ' + err.message;
         status.className = 'status-msg err';
         btn.disabled = false;
-        btn.textContent = 'Proceed to Inner Guild Hub →';
+        btn.textContent = 'Enter The Guild Hub →';
       }
     }
   </script>
