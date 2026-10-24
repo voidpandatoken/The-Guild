@@ -1,0 +1,776 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>THE GUILD | Preferred Hotel Corridor Results & CUG Rates</title>
+  <meta name="description" content="Private Closed-User-Group (CUG) wholesale hotel rates and corporate room blocks exclusively inside The Guild." />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <style>
+    :root {
+      --bg-primary: #06080d;
+      --bg-elevated: #0c1018;
+      --bg-card: rgba(16, 22, 34, 0.92);
+      --gold: #c9a449;
+      --gold-light: #e6c875;
+      --gold-border: rgba(201, 164, 73, 0.38);
+      --text-main: #f1f5f9;
+      --text-muted: #94a3b8;
+      --border-subtle: rgba(255, 255, 255, 0.08);
+      --emerald: #10b981;
+      --radius: 14px;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      background: radial-gradient(circle at 15% 0%, rgba(201, 164, 73, 0.08), transparent 40%), var(--bg-primary);
+      color: var(--text-main);
+      font-family: 'Inter', sans-serif;
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+    h1, h2, h3, .serif { font-family: 'Playfair Display', Georgia, serif; }
+    .container { max-width: 1240px; margin: 0 auto; padding: 0 24px; }
+
+    /* Navigation Bar (100% Closed-Loop Inside The Guild) */
+    .navbar {
+      position: sticky; top: 0; z-index: 1000;
+      background: rgba(6, 8, 13, 0.94);
+      backdrop-filter: blur(14px);
+      border-bottom: 1px solid var(--border-subtle);
+    }
+    .nav-inner {
+      display: flex; align-items: center; justify-content: space-between;
+      height: 76px; gap: 20px;
+    }
+    .brand { text-decoration: none; color: var(--text-main); display: flex; flex-direction: column; }
+    .brand-title { font-family: 'Playfair Display', serif; font-size: 1.4rem; font-weight: 700; letter-spacing: 0.14em; display: flex; align-items: center; gap: 10px; }
+    .brand-diamond { width: 9px; height: 9px; background: var(--gold); transform: rotate(45deg); }
+    .brand-sub { font-size: 0.64rem; text-transform: uppercase; letter-spacing: 0.2em; color: var(--gold); margin-top: 2px; font-weight: 600; }
+
+    .nav-links { display: flex; gap: 26px; list-style: none; }
+    .nav-links a { color: var(--text-muted); text-decoration: none; font-size: 0.88rem; font-weight: 500; transition: color 0.2s; }
+    .nav-links a:hover, .nav-links a.active { color: var(--gold-light); }
+
+    .cug-badge {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 8px 16px; border-radius: 99px;
+      background: rgba(16, 185, 129, 0.12); border: 1px solid rgba(16, 185, 129, 0.4);
+      color: #6ee7b7; font-size: 0.76rem; font-weight: 700; letter-spacing: 0.08em;
+    }
+    .pulse-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--emerald); box-shadow: 0 0 8px var(--emerald); }
+
+    /* Search & Corridor Control Bar */
+    .search-header {
+      padding: 48px 0 36px;
+      border-bottom: 1px solid var(--border-subtle);
+      background: linear-gradient(180deg, rgba(12, 16, 24, 0.9), rgba(6, 8, 13, 0.95));
+    }
+    .eyebrow {
+      color: var(--gold); font-size: 0.74rem; font-weight: 700;
+      letter-spacing: 0.16em; text-transform: uppercase; display: block; margin-bottom: 8px;
+    }
+    .search-header h1 { font-size: clamp(1.9rem, 3.4vw, 2.75rem); margin-bottom: 10px; }
+    .search-header p { color: var(--text-muted); max-width: 760px; font-size: 0.96rem; margin-bottom: 28px; }
+
+    .search-console {
+      background: var(--bg-elevated);
+      border: 1px solid var(--gold-border);
+      border-radius: 16px;
+      padding: 22px;
+      display: grid;
+      grid-template-columns: 1.4fr 1fr 1fr 0.9fr auto;
+      gap: 16px;
+      align-items: end;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.55);
+    }
+    .ctrl-group label {
+      display: block; font-size: 0.74rem; text-transform: uppercase;
+      letter-spacing: 0.1em; color: var(--gold-light); font-weight: 700; margin-bottom: 6px;
+    }
+    .ctrl-input {
+      width: 100%; padding: 12px 14px; background: #06080d;
+      border: 1px solid var(--border-subtle); border-radius: 10px;
+      color: var(--text-main); font-size: 0.9rem; font-family: inherit;
+    }
+    .ctrl-input:focus { outline: none; border-color: var(--gold); }
+    .btn-gold {
+      background: linear-gradient(135deg, var(--gold-light), var(--gold));
+      color: #06080d; font-weight: 800; padding: 13px 24px;
+      border-radius: 10px; border: none; cursor: pointer; font-size: 0.9rem;
+      white-space: nowrap; transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .btn-gold:hover { transform: translateY(-2px); box-shadow: 0 10px 24px rgba(201, 164, 73, 0.35); }
+
+    /* Main Results Layout */
+    .results-layout {
+      display: grid;
+      grid-template-columns: 280px 1fr;
+      gap: 30px;
+      padding: 44px 0 80px;
+      align-items: start;
+    }
+
+    /* Sidebar Filters */
+    .filter-panel {
+      background: var(--bg-elevated);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius);
+      padding: 24px;
+      position: sticky;
+      top: 96px;
+    }
+    .filter-title {
+      font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.12em;
+      color: var(--gold-light); font-weight: 700; margin-bottom: 16px;
+      padding-bottom: 10px; border-bottom: 1px solid var(--border-subtle);
+    }
+    .filter-group { margin-bottom: 22px; }
+    .filter-group h4 { font-size: 0.84rem; color: #cbd5e1; margin-bottom: 10px; font-family: 'Inter', sans-serif; }
+    .filter-check {
+      display: flex; align-items: center; gap: 10px;
+      font-size: 0.84rem; color: var(--text-muted); margin-bottom: 8px; cursor: pointer;
+    }
+    .filter-check input { accent-color: var(--gold); }
+
+    .cug-notice-box {
+      background: rgba(201, 164, 73, 0.08);
+      border: 1px solid var(--gold-border);
+      border-radius: 10px;
+      padding: 14px;
+      font-size: 0.78rem;
+      color: #cbd5e1;
+    }
+
+    /* Results Feed */
+    .results-topbar {
+      display: flex; align-items: center; justify-content: space-between;
+      margin-bottom: 20px; flex-wrap: wrap; gap: 12px;
+    }
+    .results-count { font-size: 0.92rem; color: var(--text-muted); }
+    .results-count strong { color: var(--text-main); }
+
+    .hotel-list { display: flex; flex-direction: column; gap: 22px; }
+
+    .hotel-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: 16px;
+      overflow: hidden;
+      display: grid;
+      grid-template-columns: 270px 1fr 240px;
+      transition: border-color 0.25s, transform 0.25s;
+    }
+    .hotel-card:hover {
+      border-color: var(--gold-border);
+      transform: translateY(-2px);
+    }
+
+    .hotel-visual {
+      background-size: cover;
+      background-position: center;
+      position: relative;
+      min-height: 220px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 16px;
+    }
+    .corridor-pill {
+      align-self: flex-start;
+      background: rgba(6, 8, 13, 0.88);
+      border: 1px solid var(--gold-border);
+      color: var(--gold-light);
+      font-size: 0.68rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      padding: 5px 11px;
+      border-radius: 99px;
+    }
+    .savings-ribbon {
+      align-self: flex-start;
+      background: rgba(16, 185, 129, 0.92);
+      color: #04130e;
+      font-size: 0.72rem;
+      font-weight: 800;
+      padding: 4px 10px;
+      border-radius: 6px;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+
+    .hotel-info { padding: 24px 26px; display: flex; flex-direction: column; justify-content: space-between; }
+    .hotel-tier { font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.14em; color: var(--gold); font-weight: 700; margin-bottom: 4px; }
+    .hotel-title { font-size: 1.4rem; margin-bottom: 6px; color: var(--text-main); }
+    .hotel-location { font-size: 0.84rem; color: var(--text-muted); margin-bottom: 14px; }
+    .amenity-tags { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 16px; }
+    .amenity-tag {
+      font-size: 0.74rem; background: rgba(255,255,255,0.04);
+      border: 1px solid var(--border-subtle); color: #cbd5e1;
+      padding: 4px 10px; border-radius: 6px;
+    }
+    .room-specs {
+      font-size: 0.82rem; color: #94a3b8;
+      border-top: 1px solid var(--border-subtle); padding-top: 12px;
+      display: flex; gap: 18px; flex-wrap: wrap;
+    }
+    .room-specs span { color: var(--gold-light); font-weight: 700; }
+
+    /* Right-Hand CUG Pricing Column */
+    .hotel-pricing {
+      background: rgba(6, 8, 13, 0.65);
+      border-left: 1px solid var(--border-subtle);
+      padding: 24px 22px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      text-align: right;
+    }
+    .rack-comparison { font-size: 0.78rem; color: var(--text-muted); }
+    .rack-strike { text-decoration: line-through; color: #ef4444; font-weight: 600; }
+    .cug-label { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.12em; color: var(--emerald); font-weight: 700; margin-top: 6px; }
+    .cug-rate { font-family: 'Playfair Display', serif; font-size: 2.2rem; font-weight: 700; color: var(--gold-light); line-height: 1.05; }
+    .cug-unit { font-size: 0.76rem; color: var(--text-muted); margin-bottom: 10px; }
+    .stay-summary {
+      background: rgba(201, 164, 73, 0.08);
+      border: 1px solid rgba(201, 164, 73, 0.25);
+      border-radius: 8px;
+      padding: 8px 10px;
+      font-size: 0.76rem;
+      color: #e2e8f0;
+      margin-bottom: 14px;
+    }
+    .stay-summary strong { color: #34d399; display: block; }
+
+    /* Reservation Modal Drawer */
+    .modal-backdrop {
+      position: fixed; inset: 0; z-index: 2000;
+      background: rgba(3, 5, 9, 0.82); backdrop-filter: blur(8px);
+      display: none; align-items: center; justify-content: center; padding: 20px;
+    }
+    .modal-backdrop.open { display: flex; }
+    .modal-card {
+      background: #0b0f19;
+      border: 2px solid var(--gold);
+      border-radius: 18px;
+      max-width: 560px;
+      width: 100%;
+      padding: 34px;
+      position: relative;
+      box-shadow: 0 25px 70px rgba(0,0,0,0.85);
+    }
+    .modal-close {
+      position: absolute; top: 18px; right: 20px;
+      background: none; border: none; color: var(--text-muted);
+      font-size: 1.4rem; cursor: pointer;
+    }
+    .folio-summary {
+      background: rgba(6, 8, 13, 0.9);
+      border: 1px solid var(--gold-border);
+      border-radius: 12px;
+      padding: 16px;
+      margin: 16px 0 20px;
+      font-size: 0.86rem;
+    }
+    .folio-row { display: flex; justify-content: space-between; padding: 4px 0; }
+    .folio-row.total { border-top: 1px solid var(--border-subtle); margin-top: 8px; padding-top: 10px; font-weight: 700; color: var(--gold-light); font-size: 0.98rem; }
+    .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .field { margin-bottom: 14px; }
+    .field label { display: block; font-size: 0.78rem; font-weight: 600; color: #cbd5e1; margin-bottom: 5px; }
+    .field input, .field select {
+      width: 100%; padding: 11px 13px; background: #06080d;
+      border: 1px solid var(--border-subtle); border-radius: 8px; color: var(--text-main); font-size: 0.9rem;
+    }
+    .status-alert { display: none; margin-top: 14px; padding: 12px; border-radius: 8px; font-size: 0.84rem; font-weight: 600; text-align: center; }
+    .status-alert.ok { display: block; background: rgba(16,185,129,0.16); border: 1px solid rgba(16,185,129,0.45); color: #6ee7b7; }
+    .status-alert.err { display: block; background: rgba(239,68,68,0.16); border: 1px solid rgba(239,68,68,0.45); color: #fca5a5; }
+
+    .footer { padding: 44px 0; text-align: center; border-top: 1px solid var(--border-subtle); color: var(--text-muted); font-size: 0.84rem; }
+
+    @media (max-width: 980px) {
+      .search-console { grid-template-columns: 1fr 1fr; }
+      .results-layout { grid-template-columns: 1fr; }
+      .filter-panel { position: static; }
+      .hotel-card { grid-template-columns: 1fr; }
+      .hotel-pricing { border-left: none; border-top: 1px solid var(--border-subtle); text-align: left; }
+      .nav-links { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- CLOSED-LOOP GUILD NAVBAR -->
+  <header class="navbar">
+    <div class="container nav-inner">
+      <a href="index.html" class="brand">
+        <span class="brand-title"><span class="brand-diamond"></span> THE GUILD</span>
+        <span class="brand-sub">Hospitality Rate Engine</span>
+      </a>
+
+      <ul class="nav-links">
+        <li><a href="index.html">Home &amp; Divisions</a></li>
+        <li><a href="hotel-results.html" class="active">Hotel Room Results</a></li>
+        <li><a href="perks.html">Member Perks</a></li>
+        <li><a href="guild-hub.html">Guild Hub &amp; Charter</a></li>
+      </ul>
+
+      <div class="cug-badge">
+        <span class="pulse-dot"></span> CUG WHOLESALE TIER ACTIVE
+      </div>
+    </div>
+  </header>
+
+  <!-- SEARCH & CORRIDOR FILTER BAR -->
+  <section class="search-header">
+    <div class="container">
+      <span class="eyebrow">Division 01 &bull; Closed-User-Group (CUG) Inventory</span>
+      <h1>Preferred Hotel Corridor Results</h1>
+      <p>
+        Inspect verified net member rates across participating Canadian corridor properties. Every reservation locks in direct property recognition and corporate folio tracking inside The Guild.
+      </p>
+
+      <div class="search-console">
+        <div class="ctrl-group">
+          <label for="corridorSelect">Canadian Corridor / City</label>
+          <select id="corridorSelect" class="ctrl-input" onchange="renderHotels()">
+            <option value="all">All Ontario &amp; National Corridors (6 Properties)</option>
+            <option value="Hamilton">Hamilton &amp; Burlington Corridor</option>
+            <option value="Oakville">Oakville &amp; Mississauga West</option>
+            <option value="Toronto">Toronto Financial &amp; Airport</option>
+            <option value="Niagara">Niagara Falls &amp; Wine Region</option>
+            <option value="Ottawa">Ottawa Parliamentary &amp; Tech Hub</option>
+          </select>
+        </div>
+
+        <div class="ctrl-group">
+          <label for="checkInDate">Check-In Date</label>
+          <input type="date" id="checkInDate" class="ctrl-input" onchange="updateStayNights()" />
+        </div>
+
+        <div class="ctrl-group">
+          <label for="checkOutDate">Check-Out Date</label>
+          <input type="date" id="checkOutDate" class="ctrl-input" onchange="updateStayNights()" />
+        </div>
+
+        <div class="ctrl-group">
+          <label for="roomBookingType">Booking Track</label>
+          <select id="roomBookingType" class="ctrl-input" onchange="renderHotels()">
+            <option value="all">Individual &amp; Corporate</option>
+            <option value="executive">Executive Single / King</option>
+            <option value="crew">Multi-Room / Crew Block</option>
+          </select>
+        </div>
+
+        <button type="button" class="btn-gold" onclick="renderHotels()">
+          Refresh CUG Rates
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- MAIN RESULTS FEED -->
+  <main class="container results-layout">
+    <!-- Left Sidebar Filters -->
+    <aside class="filter-panel">
+      <div class="filter-title">Refine Corridor Inventory</div>
+
+      <div class="filter-group">
+        <h4>Room Configuration</h4>
+        <label class="filter-check">
+          <input type="checkbox" checked onchange="renderHotels()" id="chkKing" /> Executive King Suites
+        </label>
+        <label class="filter-check">
+          <input type="checkbox" checked onchange="renderHotels()" id="chkDouble" /> Double Queen / Crew Rooms
+        </label>
+      </div>
+
+      <div class="filter-group">
+        <h4>Included Guild Privileges</h4>
+        <label class="filter-check">
+          <input type="checkbox" checked disabled /> Direct CUG Wholesale Rate
+        </label>
+        <label class="filter-check">
+          <input type="checkbox" checked disabled /> Flexible Corporate Cancellation
+        </label>
+        <label class="filter-check">
+          <input type="checkbox" checked disabled /> Priority Desk Verification
+        </label>
+      </div>
+
+      <div class="cug-notice-box">
+        <strong style="color: var(--gold-light); display: block; margin-bottom: 4px;">Why Rates Are Protected</strong>
+        Public OTAs enforce rate-parity markups. Because The Guild operates as a verified Closed-User-Group (CUG), properties release net wholesale inventory exclusively to Member Key holders.
+      </div>
+    </aside>
+
+    <!-- Right Hotel Cards Column -->
+    <section>
+      <div class="results-topbar">
+        <div class="results-count" id="resultsCounter">
+          Showing <strong>6</strong> verified CUG properties &bull; Stay duration: <strong id="nightsBadge">2 Nights</strong>
+        </div>
+        <div style="font-size: 0.82rem; color: var(--gold-light); font-weight: 600;">
+          Sorted by: Highest Member Savings %
+        </div>
+      </div>
+
+      <div class="hotel-list" id="hotelListContainer">
+        <!-- Populated dynamically by JS below -->
+      </div>
+    </section>
+  </main>
+
+  <!-- RESERVATION FOLIO MODAL (SUPABASE CONNECTED) -->
+  <div class="modal-backdrop" id="bookingModal">
+    <div class="modal-card">
+      <button class="modal-close" onclick="closeBookingModal()">&times;</button>
+      <span class="eyebrow">Direct Guild Folio Dispatch</span>
+      <h3 style="font-size: 1.55rem; margin-bottom: 4px;" id="modalHotelName">Lock In Member Rate</h3>
+      <p style="font-size: 0.84rem; color: var(--text-muted);" id="modalRoomSubtitle">Executive Room</p>
+
+      <div class="folio-summary">
+        <div class="folio-row">
+          <span>Public Rack Rate:</span>
+          <span id="modalRackRate" style="text-decoration: line-through; color: #ef4444;">$249/night</span>
+        </div>
+        <div class="folio-row">
+          <span>Guild CUG Member Rate:</span>
+          <span id="modalGuildRate" style="color: #34d399; font-weight: 700;">$169/night</span>
+        </div>
+        <div class="folio-row">
+          <span>Stay Duration:</span>
+          <span id="modalNightsText">2 Nights</span>
+        </div>
+        <div class="folio-row total">
+          <span>Estimated Total + Member Savings:</span>
+          <span id="modalTotalText">$338 CAD (Save $160)</span>
+        </div>
+      </div>
+
+      <form id="hotelBookingForm" onsubmit="submitHotelReservation(event)">
+        <input type="hidden" id="selectedHotelId" />
+        <div class="form-grid">
+          <div class="field">
+            <label for="guestName">Member / Guest Full Name</label>
+            <input type="text" id="guestName" placeholder="Jordan Vance" required />
+          </div>
+          <div class="field">
+            <label for="guestEmail">Primary Email Address</label>
+            <input type="email" id="guestEmail" placeholder="you@company.com" required />
+          </div>
+        </div>
+
+        <div class="form-grid">
+          <div class="field">
+            <label for="guestPhone">Direct Phone (For Folio SMS)</label>
+            <input type="tel" id="guestPhone" placeholder="(905) 555-0199" required />
+          </div>
+          <div class="field">
+            <label for="roomQty">Number of Rooms</label>
+            <select id="roomQty">
+              <option value="1">1 Room (Individual / Executive)</option>
+              <option value="2">2 Rooms</option>
+              <option value="3">3–5 Rooms (Corporate Block)</option>
+              <option value="6+">6+ Rooms (Crew / Group Desk)</option>
+            </select>
+          </div>
+        </div>
+
+        <button type="submit" id="confirmBookingBtn" class="btn-gold" style="width: 100%; margin-top: 6px;">
+          Transmit Guild Rate Reservation &rarr;
+        </button>
+
+        <div id="bookingStatus" class="status-alert"></div>
+      </form>
+    </div>
+  </div>
+
+  <!-- CLOSED-LOOP FOOTER -->
+  <footer class="footer">
+    <div class="container">
+      <p>
+        &copy; 2026 The Guild Enterprise Alliance &bull;
+        <a href="index.html" style="color: var(--gold-light); text-decoration: none;">Home</a> &bull;
+        <a href="perks.html" style="color: var(--gold-light); text-decoration: none;">Perks Preview</a> &bull;
+        <a href="guild-hub.html#charter" style="color: var(--gold-light); text-decoration: none;">Member Charter</a>
+      </p>
+    </div>
+  </footer>
+
+  <!-- DYNAMIC INVENTORY & SUPABASE FOLIO SCRIPT -->
+  <script>
+    const SUPABASE_URL = 'https://bickbvwnkuvmnqgopfve.supabase.co';
+    const SUPABASE_ANON_KEY = 'YOUR_SUPABASE_ANON_KEY_HERE'; // Paste your public anon key
+
+    let sb = null;
+    if (window.supabase && SUPABASE_ANON_KEY !== 'YOUR_SUPABASE_ANON_KEY_HERE') {
+      sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    }
+
+    // Verified Canadian Corridor CUG Hotel Inventory
+    const HOTEL_INVENTORY = [
+      {
+        id: 'HAM-01',
+        corridor: 'Hamilton',
+        tier: 'Executive Commercial Partner',
+        name: 'The Harborfront Executive Hotel — Hamilton Central',
+        location: 'Downtown Hamilton Corridor • King St & Convention District',
+        roomType: 'Executive King & Corporate Double Queen',
+        track: 'executive',
+        config: 'king',
+        rackRate: 239,
+        guildRate: 159,
+        amenities: ['Free High-Speed Wi-Fi', 'On-Site Dining & Lounge', 'Indoor Pool & Fitness', 'Late 1 PM Check-Out'],
+        gradient: 'linear-gradient(145deg, rgba(16,24,40,0.75), rgba(6,8,13,0.92)), radial-gradient(circle at 30% 30%, #c9a44933, #0b132b)'
+      },
+      {
+        id: 'OAK-02',
+        corridor: 'Oakville',
+        tier: 'QEW Corporate Corridor Hub',
+        name: 'Oakville QEW Corporate Suites & Conference Inn',
+        location: 'Oakville / Burlington Line • Direct QEW Highway Access',
+        roomType: 'Two Queen Crew Suite & Business King',
+        track: 'crew',
+        config: 'double',
+        rackRate: 249,
+        guildRate: 168,
+        amenities: ['Complimentary Parking', 'Crew Block Billing', '24/7 Business Hub', 'Express Hot Breakfast'],
+        gradient: 'linear-gradient(145deg, rgba(18,28,45,0.75), rgba(6,8,13,0.92)), radial-gradient(circle at 70% 20%, #10b98133, #0f172a)'
+      },
+      {
+        id: 'TOR-03',
+        corridor: 'Toronto',
+        tier: 'Metropolitan Flagship Property',
+        name: 'The Wellington Financial District Hotel & Suites',
+        location: 'Downtown Toronto • Union Station & Financial Core',
+        roomType: 'Corner Executive King Suite',
+        track: 'executive',
+        config: 'king',
+        rackRate: 369,
+        guildRate: 244,
+        amenities: ['VIP Desk Check-In', 'Boardroom Access Credit', 'Valet Parking Perk', 'Executive Espresso Bar'],
+        gradient: 'linear-gradient(145deg, rgba(22,30,48,0.75), rgba(6,8,13,0.92)), radial-gradient(circle at 25% 70%, #c9a44944, #090d16)'
+      },
+      {
+        id: 'TOR-04',
+        corridor: 'Toronto',
+        tier: 'Transit & Logistics Hub',
+        name: 'Pearson West Corporate Plaza & Extended Stay',
+        location: 'Mississauga / Airport West • Hwy 401 & 427 Corridor',
+        roomType: 'Double Queen Commercial Studio',
+        track: 'crew',
+        config: 'double',
+        rackRate: 229,
+        guildRate: 149,
+        amenities: ['24-Hr Airport Shuttle', 'Fleet & Truck Parking', 'In-Suite Kitchenette', 'Direct Company Invoicing'],
+        gradient: 'linear-gradient(145deg, rgba(14,22,38,0.75), rgba(6,8,13,0.92)), radial-gradient(circle at 80% 60%, #38bdf833, #0b1120)'
+      },
+      {
+        id: 'NIA-05',
+        corridor: 'Niagara',
+        tier: 'Regional Hospitality & Retreat',
+        name: 'The Escarpment Grand Resort & Conference Hotel',
+        location: 'Niagara Fallsview & St. Catharines Corridor',
+        roomType: 'Premier King Suite',
+        track: 'executive',
+        config: 'king',
+        rackRate: 289,
+        guildRate: 189,
+        amenities: ['Waived Resort Fee for Guild', 'Private Dining Credit', 'Heated Indoor Pool', 'Complimentary Self-Parking'],
+        gradient: 'linear-gradient(145deg, rgba(20,26,42,0.75), rgba(6,8,13,0.92)), radial-gradient(circle at 40% 40%, #c9a44933, #111827)'
+      },
+      {
+        id: 'OTT-06',
+        corridor: 'Ottawa',
+        tier: 'National Capital Partner',
+        name: 'The Laurier Executive Suites — Ottawa Downtown',
+        location: 'Downtown Ottawa • Parliamentary & Tech Corridor',
+        roomType: 'Executive King & Work Lounge Suite',
+        track: 'executive',
+        config: 'king',
+        rackRate: 275,
+        guildRate: 182,
+        amenities: ['Full Kitchenette Suite', 'High-Security Wi-Fi', 'Fitness & Sauna Access', 'Flexible 4 PM Cancellation'],
+        gradient: 'linear-gradient(145deg, rgba(16,24,40,0.75), rgba(6,8,13,0.92)), radial-gradient(circle at 60% 30%, #10b9812e, #0a0f1d)'
+      }
+    ];
+
+    let activeNights = 2;
+    let selectedProperty = null;
+
+    // Initialize default dates (Tomorrow + 2 Nights)
+    function initDefaultDates() {
+      const today = new Date();
+      const checkIn = new Date(today);
+      checkIn.setDate(today.getDate() + 1);
+      const checkOut = new Date(today);
+      checkOut.setDate(today.getDate() + 3);
+
+      document.getElementById('checkInDate').value = checkIn.toISOString().split('T')[0];
+      document.getElementById('checkOutDate').value = checkOut.toISOString().split('T')[0];
+
+      // Pre-fill saved lead info if present
+      const savedName = sessionStorage.getItem('guild_lead_name');
+      const savedEmail = sessionStorage.getItem('guild_lead_email');
+      if (savedName) document.getElementById('guestName').value = savedName;
+      if (savedEmail) document.getElementById('guestEmail').value = savedEmail;
+
+      renderHotels();
+    }
+
+    function updateStayNights() {
+      const inVal = new Date(document.getElementById('checkInDate').value);
+      const outVal = new Date(document.getElementById('checkOutDate').value);
+      const diff = Math.round((outVal - inVal) / (1000 * 60 * 60 * 24));
+      activeNights = diff > 0 ? diff : 1;
+      document.getElementById('nightsBadge').textContent = `${activeNights} Night${activeNights > 1 ? 's' : ''}`;
+      renderHotels();
+    }
+
+    function renderHotels() {
+      const corridor = document.getElementById('corridorSelect').value;
+      const track = document.getElementById('roomBookingType').value;
+      const showKing = document.getElementById('chkKing').checked;
+      const showDouble = document.getElementById('chkDouble').checked;
+
+      const filtered = HOTEL_INVENTORY.filter(h => {
+        const matchCorridor = (corridor === 'all' || h.corridor === corridor);
+        const matchTrack = (track === 'all' || h.track === track);
+        const matchConfig = (h.config === 'king' && showKing) || (h.config === 'double' && showDouble);
+        return matchCorridor && matchTrack && matchConfig;
+      });
+
+      document.getElementById('resultsCounter').innerHTML =
+        `Showing <strong>${filtered.length}</strong> verified CUG properties &bull; Stay duration: <strong>${activeNights} Night${activeNights > 1 ? 's' : ''}</strong>`;
+
+      const container = document.getElementById('hotelListContainer');
+      container.innerHTML = filtered.map(h => {
+        const savingsPct = Math.round(((h.rackRate - h.guildRate) / h.rackRate) * 100);
+        const totalGuild = h.guildRate * activeNights;
+        const totalSaved = (h.rackRate - h.guildRate) * activeNights;
+
+        return `
+          <article class="hotel-card">
+            <div class="hotel-visual" style="background: ${h.gradient};">
+              <span class="corridor-pill">${h.corridor} Corridor</span>
+              <span class="savings-ribbon">Save ${savingsPct}% (${h.rackRate - h.guildRate}/nt)</span>
+            </div>
+
+            <div class="hotel-info">
+              <div>
+                <div class="hotel-tier">${h.tier} &bull; Folio ID: ${h.id}</div>
+                <h2 class="hotel-title">${h.name}</h2>
+                <div class="hotel-location">&#9906; ${h.location}</div>
+                <div class="amenity-tags">
+                  ${h.amenities.map(a => `<span class="amenity-tag">&#10003; ${a}</span>`).join('')}
+                </div>
+              </div>
+              <div class="room-specs">
+                <div>Room Allocation: <span>${h.roomType}</span></div>
+                <div>Rate Key: <span>Verified Guild CUG</span></div>
+              </div>
+            </div>
+
+            <div class="hotel-pricing">
+              <div>
+                <div class="rack-comparison">Public OTA Rack: <span class="rack-strike">$${h.rackRate} CAD</span></div>
+                <div class="cug-label">Guild Preferred Net Rate</div>
+                <div class="cug-rate">$${h.guildRate}</div>
+                <div class="cug-unit">CAD / night (plus applicable tax)</div>
+              </div>
+
+              <div>
+                <div class="stay-summary">
+                  ${activeNights}-Night Stay Total: $${totalGuild} CAD
+                  <strong>Member Savings: $${totalSaved} CAD</strong>
+                </div>
+                <button type="button" class="btn-gold" style="width: 100%;" onclick="openBookingModal('${h.id}')">
+                  Hold CUG Rate &rarr;
+                </button>
+              </div>
+            </div>
+          </article>
+        `;
+      }).join('');
+    }
+
+    function openBookingModal(hotelId) {
+      selectedProperty = HOTEL_INVENTORY.find(h => h.id === hotelId);
+      if (!selectedProperty) return;
+
+      const totalGuild = selectedProperty.guildRate * activeNights;
+      const totalSaved = (selectedProperty.rackRate - selectedProperty.guildRate) * activeNights;
+
+      document.getElementById('selectedHotelId').value = selectedProperty.id;
+      document.getElementById('modalHotelName').textContent = selectedProperty.name;
+      document.getElementById('modalRoomSubtitle').textContent = `${selectedProperty.roomType} • ${selectedProperty.corridor} Corridor`;
+      document.getElementById('modalRackRate').textContent = `$${selectedProperty.rackRate} CAD / night`;
+      document.getElementById('modalGuildRate').textContent = `$${selectedProperty.guildRate} CAD / night`;
+      document.getElementById('modalNightsText').textContent = `${activeNights} Night${activeNights > 1 ? 's' : ''}`;
+      document.getElementById('modalTotalText').textContent = `$${totalGuild} CAD (You Save $${totalSaved} CAD)`;
+
+      document.getElementById('bookingStatus').className = 'status-alert';
+      document.getElementById('bookingStatus').style.display = 'none';
+      document.getElementById('bookingModal').classList.add('open');
+    }
+
+    function closeBookingModal() {
+      document.getElementById('bookingModal').classList.remove('open');
+    }
+
+    async function submitHotelReservation(e) {
+      e.preventDefault();
+      if (!selectedProperty) return;
+
+      const guestName = document.getElementById('guestName').value.trim();
+      const guestEmail = document.getElementById('guestEmail').value.trim();
+      const btn = document.getElementById('confirmBookingBtn');
+      const status = document.getElementById('bookingStatus');
+
+      btn.disabled = true;
+      btn.textContent = 'Generating Guild Folio Reference...';
+
+      const folioRef = 'GLD-' + Math.floor(100000 + Math.random() * 900000);
+
+      // Constraint-safe lead & booking capture
+      const leadPayload = {
+        full_name: guestName,
+        email: guestEmail,
+        brand_source: 'The Guild',
+        signup_funnel: `guild_hotel_results_${selectedProperty.id}`
+      };
+
+      sessionStorage.setItem('guild_lead_name', guestName);
+      sessionStorage.setItem('guild_lead_email', guestEmail);
+
+      try {
+        if (sb) {
+          const { error } = await sb.from('member_leads').insert([leadPayload]);
+          if (error) throw new Error(error.message);
+        }
+
+        status.innerHTML = `Folio Reference <strong>${folioRef}</strong> Locked! Redirecting to your Guild Charter confirmation...`;
+        status.className = 'status-alert ok';
+
+        setTimeout(() => {
+          window.location.href = `guild-hub.html?folio=${encodeURIComponent(folioRef)}#charter`;
+        }, 1200);
+      } catch (err) {
+        status.textContent = 'Database Notice: ' + err.message;
+        status.className = 'status-alert err';
+        btn.disabled = false;
+        btn.textContent = 'Transmit Guild Rate Reservation →';
+      }
+    }
+
+    window.addEventListener('DOMContentLoaded', initDefaultDates);
+  </script>
+</body>
+</html>
