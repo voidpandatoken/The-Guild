@@ -1,1174 +1,507 @@
 <!DOCTYPE html>
-<html lang="en" class="scroll-smooth">
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>THE GUILD | Enterprise & Community Alliance</title>
-  <meta name="description" content="Where hard-working business owners meet hard-working consumers. One private network. Unmatched local power." />
+  <title>THE GUILD | Private Enterprise & Hospitality Alliance</title>
+  <meta name="description" content="A private closed-user-group alliance connecting hard-working business owners and consumers. Preferred hotel rates active now." />
 
-  <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,600;0,700;1,600&display=swap" rel="stylesheet">
-
-  <!-- Supabase JS SDK v2 -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
   <style>
     :root {
-      --bg-primary: #07090e;
-      --bg-secondary: #0d111a;
-      --bg-card: rgba(19, 25, 38, 0.78);
-      --bg-card-hover: rgba(26, 34, 52, 0.95);
-      --gold-primary: #d4af37;
-      --gold-light: #f3d478;
-      --gold-glow: rgba(212, 175, 55, 0.22);
-      --text-main: #f8fafc;
+      --bg-primary: #06080d;
+      --bg-elevated: #0c1018;
+      --bg-card: rgba(16, 22, 34, 0.85);
+      --gold: #c9a449;
+      --gold-light: #e6c875;
+      --gold-border: rgba(201, 164, 73, 0.35);
+      --text-main: #f1f5f9;
       --text-muted: #94a3b8;
       --border-subtle: rgba(255, 255, 255, 0.08);
-      --border-gold: rgba(212, 175, 55, 0.35);
-      --success: #10b981;
-      --radius-lg: 16px;
-      --radius-xl: 24px;
+      --emerald: #10b981;
+      --radius: 14px;
     }
 
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
-
-    html {
-      scroll-behavior: smooth;
-      background-color: var(--bg-primary);
-      color: var(--text-main);
-      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-    }
-
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; background: var(--bg-primary); color: var(--text-main); font-family: 'Inter', sans-serif; }
     body {
-      background:
-        radial-gradient(circle at 15% 10%, rgba(212, 175, 55, 0.08), transparent 35%),
-        radial-gradient(circle at 85% 25%, rgba(56, 189, 248, 0.05), transparent 35%),
-        var(--bg-primary);
+      background: radial-gradient(circle at 20% 0%, rgba(201, 164, 73, 0.08), transparent 40%), var(--bg-primary);
       line-height: 1.6;
       overflow-x: hidden;
     }
+    h1, h2, h3, .serif { font-family: 'Playfair Display', Georgia, serif; }
+    .container { max-width: 1220px; margin: 0 auto; padding: 0 24px; }
 
-    /* Typography */
-    h1, h2, .serif-heading {
-      font-family: 'Playfair Display', Georgia, serif;
-    }
-
-    .container {
-      max-width: 1240px;
-      margin: 0 auto;
-      padding: 0 24px;
-    }
-
-    /* Top Navigation Bar (100% Internal Closed-Loop) */
+    /* Mature Header & Dropdown Submenus */
     .navbar {
-      position: sticky;
-      top: 0;
-      z-index: 1000;
-      background: rgba(7, 9, 14, 0.88);
-      backdrop-filter: blur(16px);
+      position: sticky; top: 0; z-index: 1000;
+      background: rgba(6, 8, 13, 0.92);
+      backdrop-filter: blur(14px);
       border-bottom: 1px solid var(--border-subtle);
-      padding: 18px 0;
     }
-
     .nav-inner {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 20px;
+      display: flex; align-items: center; justify-content: space-between;
+      height: 78px; gap: 24px;
     }
+    .brand { text-decoration: none; color: var(--text-main); display: flex; flex-direction: column; }
+    .brand-title { font-family: 'Playfair Display', serif; font-size: 1.45rem; font-weight: 700; letter-spacing: 0.14em; display: flex; align-items: center; gap: 10px; }
+    .brand-diamond { width: 9px; height: 9px; background: var(--gold); transform: rotate(45deg); }
+    .brand-sub { font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.2em; color: var(--gold); margin-top: 2px; font-weight: 600; }
 
-    .brand-identity {
-      display: flex;
-      flex-direction: column;
-      text-decoration: none;
-      color: var(--text-main);
+    .nav-menu { display: flex; align-items: center; gap: 28px; list-style: none; }
+    .nav-item { position: relative; padding: 26px 0; }
+    .nav-link {
+      color: var(--text-muted); text-decoration: none; font-size: 0.88rem; font-weight: 500;
+      display: flex; align-items: center; gap: 6px; transition: color 0.2s;
     }
-
-    .brand-title {
-      font-family: 'Playfair Display', serif;
-      font-size: 1.55rem;
-      font-weight: 700;
-      letter-spacing: 0.12em;
-      color: var(--text-main);
-      display: flex;
-      align-items: center;
-      gap: 10px;
+    .nav-link:hover { color: var(--gold-light); }
+    .dropdown {
+      position: absolute; top: 100%; left: 0; min-width: 250px;
+      background: #0d121c; border: 1px solid var(--gold-border);
+      border-radius: 10px; padding: 10px; display: none;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.7);
     }
-
-    .brand-crest {
-      width: 10px;
-      height: 10px;
-      background: var(--gold-primary);
-      transform: rotate(45deg);
-      box-shadow: 0 0 12px var(--gold-primary);
+    .nav-item:hover .dropdown { display: block; }
+    .dropdown a {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 10px 12px; color: var(--text-main); text-decoration: none;
+      font-size: 0.82rem; border-radius: 6px; transition: background 0.15s;
     }
-
-    .brand-subbadge {
-      font-size: 0.68rem;
-      text-transform: uppercase;
-      letter-spacing: 0.18em;
-      color: var(--gold-primary);
-      margin-top: 2px;
-      font-weight: 600;
-    }
-
-    .nav-links {
-      display: flex;
-      align-items: center;
-      gap: 28px;
-      list-style: none;
-    }
-
-    .nav-links a {
-      color: var(--text-muted);
-      text-decoration: none;
-      font-size: 0.9rem;
-      font-weight: 500;
-      transition: color 0.2s ease;
-    }
-
-    .nav-links a:hover {
-      color: var(--gold-light);
-    }
+    .dropdown a:hover { background: rgba(201, 164, 73, 0.12); color: var(--gold-light); }
+    .tag-live { font-size: 0.65rem; background: rgba(16, 185, 129, 0.18); color: #34d399; padding: 2px 7px; border-radius: 99px; font-weight: 700; }
+    .tag-soon { font-size: 0.65rem; background: rgba(148, 163, 184, 0.15); color: #94a3b8; padding: 2px 7px; border-radius: 99px; }
 
     .nav-cta {
-      background: linear-gradient(135deg, var(--gold-primary), #b38f22);
-      color: #05070b;
-      font-weight: 700;
-      font-size: 0.88rem;
-      padding: 11px 22px;
-      border-radius: 999px;
-      text-decoration: none;
-      letter-spacing: 0.03em;
-      transition: transform 0.2s ease, box-shadow 0.2s ease;
-      box-shadow: 0 4px 20px var(--gold-glow);
-      white-space: nowrap;
-    }
-
-    .nav-cta:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 8px 28px rgba(212, 175, 55, 0.4);
+      background: linear-gradient(135deg, var(--gold-light), var(--gold));
+      color: #06080d; font-weight: 700; font-size: 0.84rem;
+      padding: 10px 20px; border-radius: 99px; text-decoration: none;
     }
 
     /* Hero Section */
-    .hero {
-      padding: 96px 0 80px;
-      position: relative;
-      text-align: center;
-      border-bottom: 1px solid var(--border-subtle);
+    .hero { padding: 88px 0 72px; text-align: center; border-bottom: 1px solid var(--border-subtle); }
+    .eyebrow {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 6px 16px; border-radius: 99px;
+      background: rgba(201, 164, 73, 0.1); border: 1px solid var(--gold-border);
+      color: var(--gold-light); font-size: 0.72rem; font-weight: 700; letter-spacing: 0.16em;
+      text-transform: uppercase; margin-bottom: 24px;
     }
-
-    .eyebrow-tag {
-      display: inline-flex;
-      align-items: center;
-      gap: 10px;
-      padding: 8px 18px;
-      border-radius: 999px;
-      background: rgba(212, 175, 55, 0.1);
-      border: 1px solid var(--border-gold);
-      color: var(--gold-light);
-      font-size: 0.76rem;
-      font-weight: 700;
-      letter-spacing: 0.15em;
-      text-transform: uppercase;
-      margin-bottom: 28px;
-    }
-
-    .eyebrow-dot {
-      width: 7px;
-      height: 7px;
-      border-radius: 50%;
-      background: var(--gold-primary);
-      box-shadow: 0 0 8px var(--gold-primary);
-    }
-
     .hero h1 {
-      font-size: clamp(2.4rem, 5vw, 4.25rem);
-      line-height: 1.12;
-      max-width: 980px;
-      margin: 0 auto 24px;
-      font-weight: 700;
-      background: linear-gradient(180deg, #ffffff 0%, #cbd5e1 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
+      font-size: clamp(2.2rem, 4.5vw, 3.8rem); line-height: 1.14;
+      max-width: 920px; margin: 0 auto 18px;
+    }
+    .hero-subtitle {
+      font-family: 'Inter', sans-serif; font-size: 1.25rem; font-weight: 600;
+      color: var(--gold-light); margin-bottom: 14px;
+    }
+    .hero-desc {
+      max-width: 760px; margin: 0 auto 36px; color: var(--text-muted); font-size: 1.05rem;
+    }
+    .btn-row { display: flex; justify-content: center; gap: 16px; flex-wrap: wrap; }
+    .btn-gold {
+      background: linear-gradient(135deg, var(--gold-light), var(--gold));
+      color: #06080d; font-weight: 700; padding: 15px 30px; border-radius: 99px;
+      text-decoration: none; border: none; cursor: pointer; font-size: 0.95rem;
+    }
+    .btn-outline {
+      background: rgba(255,255,255,0.03); color: var(--text-main);
+      border: 1px solid var(--gold-border); font-weight: 600; padding: 15px 28px;
+      border-radius: 99px; text-decoration: none; font-size: 0.95rem;
     }
 
-    .hero-subheadline-title {
-      display: block;
-      font-family: 'Inter', sans-serif;
-      font-size: clamp(1.15rem, 2.2vw, 1.5rem);
-      font-weight: 700;
-      color: var(--gold-light);
-      margin-bottom: 12px;
-      letter-spacing: -0.01em;
-    }
+    /* Divisions Section */
+    .section { padding: 84px 0; border-bottom: 1px solid var(--border-subtle); }
+    .section-hdr { text-align: center; max-width: 740px; margin: 0 auto 52px; }
+    .section-eyebrow { color: var(--gold); font-size: 0.75rem; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase; display: block; margin-bottom: 10px; }
+    .section-hdr h2 { font-size: clamp(1.85rem, 3.2vw, 2.65rem); margin-bottom: 12px; }
+    .section-hdr p { color: var(--text-muted); font-size: 1rem; }
 
-    .hero-subheadline-body {
-      font-size: clamp(1.02rem, 1.6vw, 1.2rem);
-      color: var(--text-muted);
-      max-width: 820px;
-      margin: 0 auto 42px;
-      font-weight: 400;
-      line-height: 1.75;
+    /* Live Hotel Division Flagship Card */
+    .flagship-card {
+      background: linear-gradient(145deg, rgba(19, 28, 46, 0.95), rgba(10, 14, 23, 0.98));
+      border: 2px solid var(--gold);
+      border-radius: 18px; padding: 42px; margin-bottom: 32px;
+      box-shadow: 0 20px 50px rgba(201, 164, 73, 0.12);
     }
-
-    .hero-cta-group {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 18px;
-      flex-wrap: wrap;
-      margin-bottom: 56px;
+    .live-pill {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: rgba(16, 185, 129, 0.15); border: 1px solid rgba(16, 185, 129, 0.45);
+      color: #6ee7b7; font-size: 0.74rem; font-weight: 700; letter-spacing: 0.12em;
+      padding: 6px 14px; border-radius: 99px; text-transform: uppercase; margin-bottom: 18px;
     }
-
-    .btn-primary {
-      background: linear-gradient(135deg, var(--gold-light) 0%, var(--gold-primary) 100%);
-      color: #07090e;
-      font-weight: 800;
-      font-size: 1.02rem;
-      padding: 16px 34px;
-      border-radius: 999px;
-      text-decoration: none;
-      border: none;
-      cursor: pointer;
-      transition: all 0.25s ease;
-      box-shadow: 0 10px 30px rgba(212, 175, 55, 0.28);
+    .pulse-dot { width: 8px; height: 8px; background: var(--emerald); border-radius: 50%; box-shadow: 0 0 10px var(--emerald); }
+    .flagship-grid { display: grid; grid-template-columns: 1.35fr 1fr; gap: 36px; align-items: center; }
+    .flagship-card h3 { font-size: 2rem; margin-bottom: 14px; }
+    .flagship-card p { color: var(--text-muted); margin-bottom: 24px; font-size: 1rem; }
+    .feature-list { list-style: none; display: grid; gap: 12px; margin-bottom: 28px; }
+    .feature-list li { display: flex; align-items: center; gap: 10px; font-size: 0.92rem; color: #e2e8f0; }
+    .feature-list span { color: var(--gold); font-weight: 800; }
+    .rate-panel {
+      background: rgba(6, 8, 13, 0.85); border: 1px solid var(--gold-border);
+      border-radius: 14px; padding: 28px;
     }
+    .rate-stat { border-bottom: 1px solid var(--border-subtle); padding: 14px 0; display: flex; justify-content: space-between; align-items: center; }
+    .rate-stat:last-child { border-bottom: none; }
+    .rate-stat strong { color: var(--gold-light); font-size: 1.1rem; }
 
-    .btn-primary:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 14px 36px rgba(212, 175, 55, 0.42);
+    /* Blotted-Out / Blurred Divisions Grid */
+    .blurred-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px; }
+    .locked-card {
+      position: relative; background: var(--bg-card);
+      border: 1px solid var(--border-subtle); border-radius: var(--radius);
+      padding: 32px; overflow: hidden; min-height: 240px;
     }
-
-    .btn-secondary {
-      background: rgba(255, 255, 255, 0.04);
-      color: var(--text-main);
-      font-weight: 600;
-      font-size: 1.02rem;
-      padding: 16px 32px;
-      border-radius: 999px;
-      text-decoration: none;
-      border: 1px solid var(--border-gold);
-      cursor: pointer;
-      transition: all 0.25s ease;
+    .blurred-content {
+      filter: blur(7px); opacity: 0.32; user-select: none; pointer-events: none;
     }
-
-    .btn-secondary:hover {
-      background: rgba(212, 175, 55, 0.12);
-      border-color: var(--gold-light);
+    .blurred-content h4 { font-size: 1.35rem; margin-bottom: 10px; }
+    .blurred-content p { font-size: 0.92rem; color: var(--text-muted); margin-bottom: 16px; }
+    .blurred-content ul { list-style: none; display: grid; gap: 8px; font-size: 0.85rem; }
+    .lock-overlay {
+      position: absolute; inset: 0;
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      text-align: center; padding: 24px;
+      background: rgba(6, 8, 13, 0.45); backdrop-filter: blur(2px);
     }
-
-    /* Live Traction Banner */
-    .traction-strip {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 20px;
-      max-width: 1040px;
-      margin: 0 auto;
-      padding: 28px 32px;
-      background: rgba(13, 17, 26, 0.85);
-      border: 1px solid var(--border-subtle);
-      border-radius: var(--radius-xl);
+    .lock-badge {
+      background: rgba(12, 16, 24, 0.95); border: 1px solid var(--gold-border);
+      color: var(--gold-light); font-size: 0.72rem; font-weight: 700;
+      letter-spacing: 0.15em; text-transform: uppercase;
+      padding: 7px 16px; border-radius: 99px; margin-bottom: 10px;
     }
+    .lock-title { font-family: 'Playfair Display', serif; font-size: 1.25rem; color: var(--text-main); margin-bottom: 6px; }
+    .lock-sub { font-size: 0.82rem; color: var(--text-muted); max-width: 320px; }
 
-    .traction-item {
-      text-align: center;
-      border-right: 1px solid var(--border-subtle);
-      padding-right: 16px;
+    /* Lead Capture Portal */
+    .portal-box {
+      max-width: 620px; margin: 0 auto; background: var(--bg-elevated);
+      border: 1px solid var(--gold-border); border-radius: 18px; padding: 42px;
     }
-
-    .traction-item:last-child {
-      border-right: none;
-      padding-right: 0;
+    .track-tabs { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 24px; background: #06080d; padding: 6px; border-radius: 10px; }
+    .track-tab {
+      background: transparent; color: var(--text-muted); border: none;
+      padding: 12px; font-weight: 700; font-size: 0.85rem; border-radius: 8px; cursor: pointer;
     }
-
-    .traction-metric {
-      font-size: 1.45rem;
-      font-weight: 800;
-      color: var(--gold-light);
-      letter-spacing: -0.02em;
+    .track-tab.active { background: var(--gold); color: #06080d; }
+    .field { margin-bottom: 18px; }
+    .field label { display: block; font-size: 0.82rem; font-weight: 600; margin-bottom: 6px; color: #cbd5e1; }
+    .field input {
+      width: 100%; padding: 14px 16px; background: #06080d;
+      border: 1px solid var(--border-subtle); border-radius: 10px; color: var(--text-main); font-size: 0.95rem;
     }
+    .status-msg { display: none; margin-top: 16px; padding: 12px; border-radius: 8px; font-size: 0.88rem; text-align: center; font-weight: 600; }
+    .status-msg.ok { display: block; background: rgba(16,185,129,0.15); color: #6ee7b7; border: 1px solid rgba(16,185,129,0.4); }
+    .status-msg.err { display: block; background: rgba(239,68,68,0.15); color: #fca5a5; border: 1px solid rgba(239,68,68,0.4); }
 
-    .traction-label {
-      font-size: 0.78rem;
-      color: var(--text-muted);
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      margin-top: 4px;
-      font-weight: 600;
-    }
+    .footer { padding: 48px 0; text-align: center; color: var(--text-muted); font-size: 0.84rem; }
+    .footer-nav { display: flex; justify-content: center; gap: 24px; margin: 16px 0; flex-wrap: wrap; }
+    .footer-nav a { color: var(--text-muted); text-decoration: none; }
+    .footer-nav a:hover { color: var(--gold-light); }
 
-    /* Section Headers */
-    .section {
-      padding: 96px 0;
-      border-bottom: 1px solid var(--border-subtle);
-    }
-
-    .section-header {
-      text-align: center;
-      max-width: 780px;
-      margin: 0 auto 64px;
-    }
-
-    .section-tag {
-      color: var(--gold-primary);
-      text-transform: uppercase;
-      font-size: 0.78rem;
-      font-weight: 700;
-      letter-spacing: 0.16em;
-      display: block;
-      margin-bottom: 12px;
-    }
-
-    .section-title {
-      font-size: clamp(2rem, 3.6vw, 3rem);
-      line-height: 1.18;
-      margin-bottom: 16px;
-    }
-
-    .section-desc {
-      color: var(--text-muted);
-      font-size: 1.06rem;
-    }
-
-    /* The 5 Core Enterprise Pillars Grid */
-    .pillars-grid {
-      display: grid;
-      grid-template-columns: repeat(6, 1fr);
-      gap: 24px;
-    }
-
-    .pillar-card {
-      grid-column: span 2;
-      background: var(--bg-card);
-      border: 1px solid var(--border-subtle);
-      border-radius: var(--radius-lg);
-      padding: 34px 28px;
-      transition: all 0.28s ease;
-      position: relative;
-      overflow: hidden;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-    }
-
-    .pillar-card.wide {
-      grid-column: span 3;
-    }
-
-    .pillar-card:hover {
-      background: var(--bg-card-hover);
-      border-color: var(--border-gold);
-      transform: translateY(-4px);
-      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.45);
-    }
-
-    .pillar-number {
-      font-size: 0.75rem;
-      font-weight: 700;
-      letter-spacing: 0.14em;
-      text-transform: uppercase;
-      color: var(--gold-primary);
-      margin-bottom: 14px;
-      display: inline-block;
-      padding: 5px 12px;
-      background: rgba(212, 175, 55, 0.1);
-      border-radius: 999px;
-      border: 1px solid rgba(212, 175, 55, 0.25);
-    }
-
-    .pillar-title {
-      font-family: 'Playfair Display', serif;
-      font-size: 1.45rem;
-      margin-bottom: 14px;
-      color: var(--text-main);
-    }
-
-    .pillar-body {
-      color: var(--text-muted);
-      font-size: 0.95rem;
-      margin-bottom: 22px;
-    }
-
-    .pillar-bullets {
-      list-style: none;
-      border-top: 1px solid var(--border-subtle);
-      padding-top: 18px;
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-    }
-
-    .pillar-bullets li {
-      font-size: 0.86rem;
-      color: #cbd5e1;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-
-    .bullet-check {
-      color: var(--gold-primary);
-      font-weight: 800;
-    }
-
-    /* Unfair Advantage Split Matrix */
-    .matrix-grid {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 32px;
-    }
-
-    .matrix-card {
-      background: linear-gradient(160deg, rgba(19, 25, 38, 0.92), rgba(10, 14, 22, 0.95));
-      border: 1px solid var(--border-subtle);
-      border-radius: var(--radius-xl);
-      padding: 44px 38px;
-      position: relative;
-    }
-
-    .matrix-card.featured {
-      border-color: var(--border-gold);
-      box-shadow: 0 0 45px rgba(212, 175, 55, 0.08);
-    }
-
-    .matrix-badge {
-      display: inline-block;
-      font-size: 0.74rem;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.14em;
-      padding: 6px 14px;
-      border-radius: 999px;
-      background: rgba(212, 175, 55, 0.14);
-      color: var(--gold-light);
-      margin-bottom: 18px;
-    }
-
-    .matrix-title {
-      font-size: 1.85rem;
-      margin-bottom: 12px;
-    }
-
-    .matrix-subtitle {
-      color: var(--text-muted);
-      font-size: 0.98rem;
-      margin-bottom: 28px;
-    }
-
-    .matrix-list {
-      list-style: none;
-      display: flex;
-      flex-direction: column;
-      gap: 18px;
-      margin-bottom: 36px;
-    }
-
-    .matrix-list li {
-      display: flex;
-      align-items: flex-start;
-      gap: 14px;
-    }
-
-    .matrix-icon {
-      width: 26px;
-      height: 26px;
-      border-radius: 50%;
-      background: rgba(212, 175, 55, 0.16);
-      border: 1px solid var(--border-gold);
-      color: var(--gold-light);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 0.8rem;
-      flex-shrink: 0;
-      margin-top: 2px;
-    }
-
-    .matrix-item-title {
-      font-weight: 700;
-      color: var(--text-main);
-      display: block;
-      font-size: 0.98rem;
-    }
-
-    .matrix-item-desc {
-      color: var(--text-muted);
-      font-size: 0.88rem;
-    }
-
-    /* Lead Capture & Page-2 Handoff Section */
-    .intake-wrapper {
-      max-width: 680px;
-      margin: 0 auto;
-      background: rgba(15, 20, 32, 0.94);
-      border: 1px solid var(--border-gold);
-      border-radius: var(--radius-xl);
-      padding: 48px 42px;
-      box-shadow: 0 24px 60px rgba(0, 0, 0, 0.65);
-    }
-
-    .path-toggle {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 10px;
-      background: rgba(7, 9, 14, 0.9);
-      padding: 8px;
-      border-radius: 14px;
-      border: 1px solid var(--border-subtle);
-      margin-bottom: 28px;
-    }
-
-    .toggle-btn {
-      background: transparent;
-      border: none;
-      color: var(--text-muted);
-      font-weight: 700;
-      font-size: 0.88rem;
-      padding: 13px 16px;
-      border-radius: 10px;
-      cursor: pointer;
-      transition: all 0.2s ease;
-      text-align: center;
-    }
-
-    .toggle-btn.active {
-      background: linear-gradient(135deg, var(--gold-light), var(--gold-primary));
-      color: #07090e;
-      box-shadow: 0 4px 16px rgba(212, 175, 55, 0.25);
-    }
-
-    .form-group {
-      margin-bottom: 20px;
-    }
-
-    .form-label {
-      display: block;
-      font-size: 0.84rem;
-      font-weight: 600;
-      color: #cbd5e1;
-      margin-bottom: 8px;
-      letter-spacing: 0.02em;
-    }
-
-    .form-input {
-      width: 100%;
-      padding: 15px 18px;
-      background: rgba(7, 9, 14, 0.85);
-      border: 1px solid var(--border-subtle);
-      border-radius: 12px;
-      color: var(--text-main);
-      font-size: 0.98rem;
-      font-family: inherit;
-      transition: border-color 0.2s ease, box-shadow 0.2s ease;
-    }
-
-    .form-input:focus {
-      outline: none;
-      border-color: var(--gold-primary);
-      box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.15);
-    }
-
-    .submit-btn {
-      width: 100%;
-      padding: 17px 24px;
-      background: linear-gradient(135deg, var(--gold-light) 0%, var(--gold-primary) 100%);
-      color: #07090e;
-      font-weight: 800;
-      font-size: 1.02rem;
-      border: none;
-      border-radius: 12px;
-      cursor: pointer;
-      transition: all 0.25s ease;
-      margin-top: 8px;
-    }
-
-    .submit-btn:hover:not(:disabled) {
-      transform: translateY(-2px);
-      box-shadow: 0 12px 28px rgba(212, 175, 55, 0.35);
-    }
-
-    .submit-btn:disabled {
-      opacity: 0.65;
-      cursor: not-allowed;
-    }
-
-    .status-banner {
-      display: none;
-      margin-top: 18px;
-      padding: 14px 18px;
-      border-radius: 12px;
-      font-size: 0.9rem;
-      font-weight: 600;
-      text-align: center;
-    }
-
-    .status-banner.success {
-      display: block;
-      background: rgba(16, 185, 129, 0.14);
-      border: 1px solid rgba(16, 185, 129, 0.4);
-      color: #6ee7b7;
-    }
-
-    .status-banner.error {
-      display: block;
-      background: rgba(239, 68, 68, 0.14);
-      border: 1px solid rgba(239, 68, 68, 0.4);
-      color: #fca5a5;
-    }
-
-    .privacy-note {
-      text-align: center;
-      font-size: 0.78rem;
-      color: var(--text-muted);
-      margin-top: 16px;
-    }
-
-    /* Footer */
-    .footer {
-      padding: 56px 0;
-      text-align: center;
-      color: var(--text-muted);
-      font-size: 0.86rem;
-    }
-
-    .footer-links {
-      display: flex;
-      justify-content: center;
-      gap: 24px;
-      margin: 18px 0 24px;
-      flex-wrap: wrap;
-    }
-
-    .footer-links a {
-      color: var(--text-muted);
-      text-decoration: none;
-      transition: color 0.2s ease;
-    }
-
-    .footer-links a:hover {
-      color: var(--gold-light);
-    }
-
-    /* Responsive Breakpoints */
-    @media (max-width: 992px) {
-      .nav-links {
-        display: none;
-      }
-      .pillars-grid {
-        grid-template-columns: 1fr;
-      }
-      .pillar-card, .pillar-card.wide {
-        grid-column: span 1;
-      }
-      .matrix-grid {
-        grid-template-columns: 1fr;
-      }
-      .traction-strip {
-        grid-template-columns: repeat(2, 1fr);
-      }
-      .traction-item:nth-child(2) {
-        border-right: none;
-      }
-    }
-
-    @media (max-width: 600px) {
-      .hero {
-        padding: 64px 0 56px;
-      }
-      .traction-strip {
-        grid-template-columns: 1fr;
-      }
-      .traction-item {
-        border-right: none;
-        border-bottom: 1px solid var(--border-subtle);
-        padding-bottom: 14px;
-        padding-right: 0;
-      }
-      .traction-item:last-child {
-        border-bottom: none;
-        padding-bottom: 0;
-      }
-      .intake-wrapper {
-        padding: 32px 22px;
-      }
-      .path-toggle {
-        grid-template-columns: 1fr;
-      }
+    @media (max-width: 900px) {
+      .nav-menu { display: none; }
+      .flagship-grid, .blurred-grid { grid-template-columns: 1fr; }
     }
   </style>
 </head>
 <body>
 
-  <!-- TOP NAVIGATION BAR (100% Closed-Loop Inside The Guild) -->
+  <!-- MATURE EXECUTIVE HEADER WITH SUBMENUS -->
   <header class="navbar">
     <div class="container nav-inner">
-      <a href="#top" class="brand-identity">
-        <span class="brand-title">
-          <span class="brand-crest"></span>
-          THE GUILD
-        </span>
-        <span class="brand-subbadge">Enterprise &amp; Community Alliance</span>
+      <a href="index.html" class="brand">
+        <span class="brand-title"><span class="brand-diamond"></span> THE GUILD</span>
+        <span class="brand-sub">Enterprise &amp; Community Alliance</span>
       </a>
 
-      <ul class="nav-links">
-        <li><a href="#pillars">The 5 Pillars</a></li>
-        <li><a href="#consumer-perks">Consumer Perks</a></li>
-        <li><a href="#business-coop">Business Co-Op</a></li>
-        <li><a href="#legal-workspaces">Legal &amp; Workspaces</a></li>
-        <li><a href="#community-grants">Community Grants</a></li>
+      <ul class="nav-menu">
+        <li class="nav-item">
+          <a href="#hotel-division" class="nav-link">Hospitality &amp; Stays &#9662;</a>
+          <div class="dropdown">
+            <a href="#hotel-division">Preferred Hotel Rates <span class="tag-live">LIVE</span></a>
+            <a href="#hotel-division">Corporate &amp; Crew Blocks <span class="tag-live">LIVE</span></a>
+            <a href="perks.html#live-hotels">Corridor Rate Breakdown <span class="tag-live">LIVE</span></a>
+          </div>
+        </li>
+        <li class="nav-item">
+          <a href="perks.html" class="nav-link">Member Perks &#9662;</a>
+          <div class="dropdown">
+            <a href="perks.html#live-hotels">Hotel Rate Privileges <span class="tag-live">LIVE</span></a>
+            <a href="perks.html#upcoming-perks">Independent Dining <span class="tag-soon">SOON</span></a>
+            <a href="perks.html#upcoming-perks">Executive Transit <span class="tag-soon">SOON</span></a>
+            <a href="perks.html#upcoming-perks">Recovery &amp; Valet <span class="tag-soon">SOON</span></a>
+          </div>
+        </li>
+        <li class="nav-item">
+          <a href="#staged-divisions" class="nav-link">Alliance Divisions &#9662;</a>
+          <div class="dropdown">
+            <a href="#staged-divisions">Shared Workspaces <span class="tag-soon">PHASE 2</span></a>
+            <a href="#staged-divisions">Free Legal Intake <span class="tag-soon">PHASE 2</span></a>
+            <a href="#staged-divisions">B2B Purchasing Co-Op <span class="tag-soon">PHASE 2</span></a>
+            <a href="#staged-divisions">Community Scaling Grants <span class="tag-soon">PHASE 2</span></a>
+          </div>
+        </li>
+        <li class="nav-item">
+          <a href="guild-hub.html" class="nav-link">Guild Hub &amp; Reviews &#9662;</a>
+          <div class="dropdown">
+            <a href="guild-hub.html#directory">Directory Categories</a>
+            <a href="guild-hub.html#feedback">Member Reviews &amp; Feedback</a>
+            <a href="guild-hub.html#charter">Official Member Charter</a>
+          </div>
+        </li>
       </ul>
 
-      <a href="#access-portal" class="nav-cta">Request Access &rarr;</a>
+      <a href="#access-portal" class="nav-cta">Request Member Key &rarr;</a>
     </div>
   </header>
 
-  <!-- HERO SECTION -->
-  <section id="top" class="hero">
+  <!-- HERO SECTION (ZERO PRICE MENTION) -->
+  <section class="hero">
     <div class="container">
-      <div class="eyebrow-tag">
-        <span class="eyebrow-dot"></span>
-        THE COLLABORATIVE ECONOMIC ENGINE &bull; COMMUNITY SERVING COMMUNITY
-      </div>
-
+      <div class="eyebrow">PRIVATE CLOSED-USER-GROUP ALLIANCE &bull; CANADIAN CORRIDOR</div>
       <h1>Where Hard-Working Business Owners Meet Hard-Working Consumers.</h1>
-
-      <h2>
-        <span class="hero-subheadline-title">One Private Network. Unmatched Local Power.</span>
-        <span class="hero-subheadline-body">
-          Step inside a self-sustaining ecosystem built to keep wealth, opportunity, and loyalty in our own backyard. From private merchant privileges and shared corporate boardrooms to free legal intake and small-business scaling grants—The Guild is how we win together.
-        </span>
-      </h2>
-
-      <div class="hero-cta-group">
-        <button type="button" class="btn-primary" onclick="selectTrackAndScroll('consumer')">
-          Claim Your Member Key &rarr;
-        </button>
-        <button type="button" class="btn-secondary" onclick="selectTrackAndScroll('business')">
-          Enroll Your Business
-        </button>
-      </div>
-
-      <!-- Live Alliance Traction Strip -->
-      <div class="traction-strip">
-        <div class="traction-item">
-          <div class="traction-metric">10% – 20%+</div>
-          <div class="traction-label">Verified Member Privileges</div>
-        </div>
-        <div class="traction-item">
-          <div class="traction-metric">On-Demand</div>
-          <div class="traction-label">Shared Boardrooms &amp; Hubs</div>
-        </div>
-        <div class="traction-item">
-          <div class="traction-metric">100% Free</div>
-          <div class="traction-label">Legal Intake Referrals</div>
-        </div>
-        <div class="traction-item">
-          <div class="traction-metric">Closed-Loop</div>
-          <div class="traction-label">B2B Co-Op &amp; Scaling Grants</div>
-        </div>
+      <p class="hero-subtitle">One Private Network. Institutional Purchasing Leverage.</p>
+      <p class="hero-desc">
+        The Guild is a self-contained economic alliance engineered to keep capital, hospitality access, and purchasing power within our verified member network. Our flagship <strong>Preferred Hotel &amp; Hospitality Rate Engine</strong> is active now, with additional corporate and community divisions staged for phase-two release.
+      </p>
+      <div class="btn-row">
+        <a href="#access-portal" class="btn-gold">Unlock Preferred Hotel Rates &rarr;</a>
+        <a href="perks.html" class="btn-outline">Explore Member Perks Preview</a>
       </div>
     </div>
   </section>
 
-  <!-- THE 5 CORE ENTERPRISE PILLARS -->
-  <section id="pillars" class="section">
+  <!-- DIVISION SHOWCASE: 1 LIVE + 4 BLOTTED OUT -->
+  <section id="hotel-division" class="section">
     <div class="container">
-      <div class="section-header">
-        <span class="section-tag">The Architecture of Mutual Prosperity</span>
-        <h2 class="section-title">The 5 Core Pillars of The Guild</h2>
-        <p class="section-desc">
-          Designed so every member action strengthens local merchants, lowers operating overhead for founders, and rewards everyday consumers.
-        </p>
+      <div class="section-hdr">
+        <span class="section-eyebrow">Alliance Infrastructure</span>
+        <h2>Active Flagship &amp; Staged Divisions</h2>
+        <p>Hospitality rate privileges are live for verified members today. Additional alliance pillars remain sealed during partner onboarding.</p>
       </div>
 
-      <div class="pillars-grid">
-        <!-- Pillar 1 -->
-        <div id="consumer-perks" class="pillar-card">
+      <!-- LIVE DIVISION 01: HOTEL RATES -->
+      <div class="flagship-card">
+        <div class="live-pill"><span class="pulse-dot"></span> Division 01 &bull; Active Flagship Service</div>
+        <div class="flagship-grid">
           <div>
-            <span class="pillar-number">Pillar 01 &bull; Loyalty</span>
-            <h3 class="pillar-title">Brand Loyalty &amp; Private Merchant Network</h3>
-            <p class="pillar-body">
-              Unlock curated 10% to 20%+ insider privileges across independent dining, specialty retail, valet dry cleaning, strength &amp; recovery clubs, and regional hospitality using your verified Guild Key.
+            <h3>Preferred Hotel &amp; Hospitality Rates</h3>
+            <p>
+              Bypass inflated public booking engines. Verified Guild members receive direct Closed-User-Group (CUG) access to wholesale-tier hotel rates, corporate room blocks, and priority check-in privileges across major Canadian travel corridors.
             </p>
+            <ul class="feature-list">
+              <li><span>&#10003;</span> Private CUG rates 15%–35% below standard public rack pricing</li>
+              <li><span>&#10003;</span> Direct-to-property reservations for business travel, crews, and leisure stays</li>
+              <li><span>&#10003;</span> Dedicated priority desk for multi-room corporate and regional bookings</li>
+            </ul>
+            <div class="btn-row" style="justify-content: flex-start;">
+              <a href="#access-portal" class="btn-gold">Claim Your Hotel Rate Key &rarr;</a>
+              <a href="perks.html#live-hotels" class="btn-outline">View Rate Mechanics</a>
+            </div>
           </div>
-          <ul class="pillar-bullets">
-            <li><span class="bullet-check">&#10003;</span> Instant verification with your digital Member Key</li>
-            <li><span class="bullet-check">&#10003;</span> Direct-to-merchant loyalty with zero middlemen</li>
-            <li><span class="bullet-check">&#10003;</span> Priority access to culinary, fitness, and local venues</li>
-          </ul>
-        </div>
 
-        <!-- Pillar 2 -->
-        <div id="legal-workspaces" class="pillar-card">
-          <div>
-            <span class="pillar-number">Pillar 02 &bull; Infrastructure</span>
-            <h3 class="pillar-title">Corporate &amp; Workspace Collaboration</h3>
-            <p class="pillar-body">
-              Eliminate expensive commercial lease bloat. Access shared executive boardrooms, collaborative meeting suites, private event venues, and coordinated corporate fleet logistics across participating hubs.
-            </p>
+          <div class="rate-panel">
+            <div style="font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.14em; color: var(--gold); font-weight: 700; margin-bottom: 10px;">
+              Live Member Rate Corridor
+            </div>
+            <div class="rate-stat">
+              <span>Rate Classification</span>
+              <strong>Closed-User-Group (CUG)</strong>
+            </div>
+            <div class="rate-stat">
+              <span>Member Savings Tier</span>
+              <strong>15% – 35% Preferred</strong>
+            </div>
+            <div class="rate-stat">
+              <span>Booking Eligibility</span>
+              <strong>Individual &amp; Corporate</strong>
+            </div>
+            <div class="rate-stat">
+              <span>Division Status</span>
+              <strong style="color: #34d399;">Active &amp; Accepting Keys</strong>
+            </div>
           </div>
-          <ul class="pillar-bullets">
-            <li><span class="bullet-check">&#10003;</span> Reserve client-ready boardrooms and presentation hubs</li>
-            <li><span class="bullet-check">&#10003;</span> Host networking nights and private member showcases</li>
-            <li><span class="bullet-check">&#10003;</span> Coordinated executive transit and local courier perks</li>
-          </ul>
-        </div>
-
-        <!-- Pillar 3 -->
-        <div class="pillar-card">
-          <div>
-            <span class="pillar-number">Pillar 03 &bull; Protection</span>
-            <h3 class="pillar-title">Professional Services &amp; Free Legal Intake</h3>
-            <p class="pillar-body">
-              Navigate contracts, disputes, and corporate structuring with confidence. Every Guild member receives direct access to our vetted legal referral network—starting with complimentary legal intake consultations.
-            </p>
-          </div>
-          <ul class="pillar-bullets">
-            <li><span class="bullet-check">&#10003;</span> Free initial legal intake and case routing</li>
-            <li><span class="bullet-check">&#10003;</span> Vetted accounting, tax, and billing specialists</li>
-            <li><span class="bullet-check">&#10003;</span> Administrative &amp; operational advisory support</li>
-          </ul>
-        </div>
-
-        <!-- Pillar 4 -->
-        <div id="community-grants" class="pillar-card wide">
-          <div>
-            <span class="pillar-number">Pillar 04 &bull; Impact &amp; Incubation</span>
-            <h3 class="pillar-title">Green Energy, Philanthropy &amp; Startup Scaling</h3>
-            <p class="pillar-body">
-              A portion of alliance momentum fuels real-world community renewal. We back local founders with micro-grant assistance, startup scaling mentorship, and clean green-energy transitions that build lasting regional resilience.
-            </p>
-          </div>
-          <ul class="pillar-bullets">
-            <li><span class="bullet-check">&#10003;</span> Founder micro-grants and early-stage launch support</li>
-            <li><span class="bullet-check">&#10003;</span> Commercial solar &amp; green infrastructure initiatives</li>
-            <li><span class="bullet-check">&#10003;</span> Direct community reinvestment led by members</li>
-          </ul>
-        </div>
-
-        <!-- Pillar 5 -->
-        <div id="business-coop" class="pillar-card wide">
-          <div>
-            <span class="pillar-number">Pillar 05 &bull; Enterprise Scale</span>
-            <h3 class="pillar-title">Co-Op Group Purchasing &amp; B2B Marketplace</h3>
-            <p class="pillar-body">
-              Independent businesses shouldn't pay retail penalties. Pool your purchasing volume with hundreds of fellow owners to command enterprise pricing on supplies, payment processing, commercial insurance, and B2B services.
-            </p>
-          </div>
-          <ul class="pillar-bullets">
-            <li><span class="bullet-check">&#10003;</span> Collective bargaining rates on merchant &amp; vendor contracts</li>
-            <li><span class="bullet-check">&#10003;</span> Private member-to-member B2B trade directory</li>
-            <li><span class="bullet-check">&#10003;</span> Vetted local talent &amp; hiring referral board</li>
-          </ul>
         </div>
       </div>
-    </div>
-  </section>
 
-  <!-- THE "UNFAIR ADVANTAGE" BREAKDOWN (Zero Price Mention) -->
-  <section class="section">
-    <div class="container">
-      <div class="section-header">
-        <span class="section-tag">Consumers R Us &bull; Two Sides of One Coin</span>
-        <h2 class="section-title">Built to Empower Both Sides of the Counter</h2>
-        <p class="section-desc">
-          Whether you are an everyday household looking to stretch every dollar or an independent founder scaling your enterprise, The Guild gives you institutional leverage.
-        </p>
-      </div>
-
-      <div class="matrix-grid">
-        <!-- Consumer Side -->
-        <div class="matrix-card">
-          <span class="matrix-badge">For Everyday Consumers</span>
-          <h3 class="matrix-title serif-heading">The "Consumers r Us" Advantage</h3>
-          <p class="matrix-subtitle">
-            Turn your everyday spending into VIP treatment, protected rights, and tangible community strength.
-          </p>
-
-          <ul class="matrix-list">
-            <li>
-              <span class="matrix-icon">&#9733;</span>
-              <div>
-                <span class="matrix-item-title">Protected Closed-User-Group (CUG) Rates</span>
-                <span class="matrix-item-desc">Access private 10%–20%+ savings across dining, fitness, dry cleaning, automotive, and hospitality partners.</span>
-              </div>
-            </li>
-            <li>
-              <span class="matrix-icon">&#9878;</span>
-              <div>
-                <span class="matrix-item-title">On-Call Legal Intake &amp; Advocacy</span>
-                <span class="matrix-item-desc">Never face a contract, employment, or consumer dispute alone—start with a free legal intake session through our partner network.</span>
-              </div>
-            </li>
-            <li>
-              <span class="matrix-icon">&#9889;</span>
-              <div>
-                <span class="matrix-item-title">Workspace &amp; Event Access</span>
-                <span class="matrix-item-desc">Step into professional work lounges, community summits, and member-only social gatherings across your city.</span>
-              </div>
-            </li>
-          </ul>
-
-          <button type="button" class="btn-primary" style="width: 100%;" onclick="selectTrackAndScroll('consumer')">
-            Continue as an Individual Member &rarr;
-          </button>
+      <!-- 4 BLOTTED-OUT / BLURRED DIVISIONS -->
+      <div id="staged-divisions" class="blurred-grid">
+        <!-- Blurred 1 -->
+        <div class="locked-card">
+          <div class="blurred-content">
+            <h4>Corporate &amp; Shared Workspace Network</h4>
+            <p>On-demand executive boardrooms, private meeting suites, and regional work hubs across partner properties.</p>
+            <ul>
+              <li>• Hourly and full-day executive boardroom reservations</li>
+              <li>• Presentation suites and private member event spaces</li>
+            </ul>
+          </div>
+          <div class="lock-overlay">
+            <span class="lock-badge">Blotted Out &bull; Coming Soon</span>
+            <div class="lock-title">Corporate &amp; Workspace Network</div>
+            <p class="lock-sub">Executive boardrooms and collaborative work hubs are currently in Phase 2 partner verification.</p>
+          </div>
         </div>
 
-        <!-- Business Owner Side -->
-        <div class="matrix-card featured">
-          <span class="matrix-badge">For Business Owners &amp; Founders</span>
-          <h3 class="matrix-title serif-heading">The Enterprise Expansion Engine</h3>
-          <p class="matrix-subtitle">
-            Acquire loyal customers with zero ad-spend waste while slashing your operational overhead through collective scale.
-          </p>
+        <!-- Blurred 2 -->
+        <div class="locked-card">
+          <div class="blurred-content">
+            <h4>Professional Services &amp; Free Legal Intake</h4>
+            <p>Direct access to vetted legal counsel, contract review, and corporate accounting specialists.</p>
+            <ul>
+              <li>• Complimentary initial legal intake consultations</li>
+              <li>• Billing, reconciliation, and tax advisory routing</li>
+            </ul>
+          </div>
+          <div class="lock-overlay">
+            <span class="lock-badge">Blotted Out &bull; Coming Soon</span>
+            <div class="lock-title">Legal Intake &amp; Advisory Network</div>
+            <p class="lock-sub">Complimentary legal intake and professional referral routing will unlock following charter completion.</p>
+          </div>
+        </div>
 
-          <ul class="matrix-list">
-            <li>
-              <span class="matrix-icon">&#10138;</span>
-              <div>
-                <span class="matrix-item-title">Guaranteed Local Customer Pipeline</span>
-                <span class="matrix-item-desc">Get featured directly inside The Guild's verified member directory so high-intent local consumers choose your business first.</span>
-              </div>
-            </li>
-            <li>
-              <span class="matrix-icon">&#9670;</span>
-              <div>
-                <span class="matrix-item-title">Shared Boardrooms &amp; Co-Op Purchasing</span>
-                <span class="matrix-item-desc">Use executive meeting rooms on demand and join B2B group purchasing blocks to cut vendor and supply costs.</span>
-              </div>
-            </li>
-            <li>
-              <span class="matrix-icon">&#9873;</span>
-              <div>
-                <span class="matrix-item-title">Scaling Grants, Legal &amp; B2B Synergy</span>
-                <span class="matrix-item-desc">Tap into business legal intake, accounting reconciliation partners, and The Guild's startup incubation initiatives.</span>
-              </div>
-            </li>
-          </ul>
+        <!-- Blurred 3 -->
+        <div class="locked-card">
+          <div class="blurred-content">
+            <h4>Co-Op Group Purchasing &amp; B2B Marketplace</h4>
+            <p>Pool purchasing volume with fellow independent owners to secure wholesale vendor and processing rates.</p>
+            <ul>
+              <li>• Group bargaining on commercial insurance and supplies</li>
+              <li>• Member-to-member B2B trade and hiring directory</li>
+            </ul>
+          </div>
+          <div class="lock-overlay">
+            <span class="lock-badge">Blotted Out &bull; Coming Soon</span>
+            <div class="lock-title">Co-Op Purchasing &amp; B2B Trade</div>
+            <p class="lock-sub">Collective vendor contracts and B2B marketplace access are sealed during initial cohort enrollment.</p>
+          </div>
+        </div>
 
-          <button type="button" class="btn-secondary" style="width: 100%;" onclick="selectTrackAndScroll('business')">
-            Continue as a Business Partner &rarr;
-          </button>
+        <!-- Blurred 4 -->
+        <div class="locked-card">
+          <div class="blurred-content">
+            <h4>Green Energy, Philanthropy &amp; Startup Scaling</h4>
+            <p>Community-backed founder micro-grants, commercial solar transitions, and regional reinvestment.</p>
+            <ul>
+              <li>• Early-stage business incubation and scaling grants</li>
+              <li>• Clean energy infrastructure partnerships</li>
+            </ul>
+          </div>
+          <div class="lock-overlay">
+            <span class="lock-badge">Blotted Out &bull; Coming Soon</span>
+            <div class="lock-title">Startup Scaling &amp; Green Initiatives</div>
+            <p class="lock-sub">Micro-grant allocation and green infrastructure programs launch in upcoming alliance quarters.</p>
+          </div>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- FRICTIONLESS LEAD CAPTURE & PAGE-2 HANDOFF (Supabase Constraint Fixes Built-In) -->
+  <!-- SUPABASE LEAD CAPTURE & HANDOFF TO GUILD HUB -->
   <section id="access-portal" class="section">
     <div class="container">
-      <div class="section-header" style="margin-bottom: 40px;">
-        <span class="section-tag">Step 1 of 2 &bull; Member Verification</span>
-        <h2 class="section-title">Unlock Your Guild Dossier &amp; Member Key</h2>
-        <p class="section-desc">
-          Select your track and enter your details below to register your spot and proceed to the full membership charter.
-        </p>
+      <div class="section-hdr" style="margin-bottom: 36px;">
+        <span class="section-eyebrow">Step 1 &bull; Credential Registration</span>
+        <h2>Enter The Guild Hub &amp; Hotel Rate Dossier</h2>
+        <p>Register your credentials below to unlock the inner Guild directory subsection, member reviews, and charter terms.</p>
       </div>
 
-      <div class="intake-wrapper">
-        <!-- Path Selector Toggle -->
-        <div class="path-toggle" role="tablist">
-          <button
-            type="button"
-            id="toggle-consumer"
-            class="toggle-btn active"
-            onclick="setMemberTrack('consumer')"
-          >
-            I am a Consumer / Individual
-          </button>
-          <button
-            type="button"
-            id="toggle-business"
-            class="toggle-btn"
-            onclick="setMemberTrack('business')"
-          >
-            I am a Business Owner
-          </button>
+      <div class="portal-box">
+        <div class="track-tabs">
+          <button type="button" id="tabConsumer" class="track-tab active" onclick="switchTrack('consumer')">Individual / Consumer</button>
+          <button type="button" id="tabBusiness" class="track-tab" onclick="switchTrack('business')">Business Owner / Partner</button>
         </div>
 
-        <form id="guildLeadForm" onsubmit="handleGuildLeadSubmit(event)">
-          <input type="hidden" id="selectedTrack" value="consumer" />
-
-          <div class="form-group">
-            <label class="form-label" for="fullName" id="nameLabel">Your Full Name</label>
-            <input
-              type="text"
-              id="fullName"
-              class="form-input"
-              placeholder="e.g., Jordan Vance"
-              required
-            />
+        <form id="leadForm" onsubmit="submitGuildLead(event)">
+          <input type="hidden" id="memberTrack" value="consumer" />
+          <div class="field">
+            <label id="nameLbl" for="fullName">Full Name</label>
+            <input type="text" id="fullName" placeholder="Enter your full name" required />
           </div>
-
-          <div class="form-group">
-            <label class="form-label" for="emailAddress">Primary Email Address</label>
-            <input
-              type="email"
-              id="emailAddress"
-              class="form-input"
-              placeholder="you@domain.com"
-              required
-            />
+          <div class="field">
+            <label for="emailAddr">Email Address</label>
+            <input type="email" id="emailAddr" placeholder="you@company.com" required />
           </div>
-
-          <button type="submit" id="submitBtn" class="submit-btn">
-            Proceed to Membership Charter &rarr;
+          <button type="submit" id="submitBtn" class="btn-gold" style="width: 100%; margin-top: 6px;">
+            Proceed to Inner Guild Hub &rarr;
           </button>
-
-          <div id="statusBanner" class="status-banner"></div>
-
-          <p class="privacy-note">
-            100% Private Closed-User-Group Network. Your credentials remain strictly inside The Guild ecosystem.
-          </p>
+          <div id="statusBox" class="status-msg"></div>
         </form>
       </div>
     </div>
   </section>
 
-  <!-- CLOSED-LOOP FOOTER -->
   <footer class="footer">
     <div class="container">
-      <div class="brand-title" style="justify-content: center; margin-bottom: 8px;">
-        <span class="brand-crest"></span>
-        THE GUILD
+      <div class="brand-title" style="justify-content: center; margin-bottom: 6px;">
+        <span class="brand-diamond"></span> THE GUILD
       </div>
-      <p>Community Serving Community &bull; Consumers r Us</p>
-      <div class="footer-links">
-        <a href="#pillars">The 5 Pillars</a>
-        <a href="#consumer-perks">Merchant Network</a>
-        <a href="#business-coop">B2B Co-Op</a>
-        <a href="#legal-workspaces">Legal &amp; Workspaces</a>
-        <a href="#community-grants">Startup Scaling</a>
-        <a href="#access-portal">Request Access</a>
+      <p>Private Closed-User-Group Alliance &bull; All Traffic Remains Strictly Inside The Guild</p>
+      <div class="footer-nav">
+        <a href="index.html">Home</a>
+        <a href="perks.html">Member Perks</a>
+        <a href="guild-hub.html">Guild Hub &amp; Directory</a>
+        <a href="guild-hub.html#feedback">Member Feedback</a>
       </div>
-      <p style="font-size: 0.76rem; opacity: 0.65;">
-        &copy; 2026 The Guild Enterprise Alliance. All rights reserved.
-      </p>
+      <p style="font-size: 0.75rem; opacity: 0.6;">&copy; 2026 The Guild Enterprise Alliance. All rights reserved.</p>
     </div>
   </footer>
 
-  <!-- SUPABASE LEAD CAPTURE & HANDOFF SCRIPT -->
   <script>
-    /**
-     * ============================================================================
-     * SUPABASE CONFIGURATION & CONSTRAINT-SAFE INSERTION
-     * Project ID from your dashboard: bickbvwnkuvmnqgopfve
-     * ============================================================================
-     */
     const SUPABASE_URL = 'https://bickbvwnkuvmnqgopfve.supabase.co';
-    // Paste your public 'anon' key from Supabase -> Project Settings -> API below:
-    const SUPABASE_ANON_KEY = 'YOUR_SUPABASE_ANON_KEY_HERE';
+    const SUPABASE_ANON_KEY = 'YOUR_SUPABASE_ANON_KEY_HERE'; // Paste public anon key
 
-    // Page 2 destination (where full charter + bottom-of-page pricing live)
-    const NEXT_PAGE_URL = 'membership.html';
-
-    // Initialize client (or use existing global instance if loaded externally)
-    let supabaseClient = window.hotbedsDb || window.supabaseClient || null;
-    if (!supabaseClient && window.supabase && SUPABASE_ANON_KEY !== 'YOUR_SUPABASE_ANON_KEY_HERE') {
-      supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    let sb = null;
+    if (window.supabase && SUPABASE_ANON_KEY !== 'YOUR_SUPABASE_ANON_KEY_HERE') {
+      sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
     }
 
-    // Toggle between Consumer and Business Owner track
-    function setMemberTrack(track) {
-      const trackInput = document.getElementById('selectedTrack');
-      const btnConsumer = document.getElementById('toggle-consumer');
-      const btnBusiness = document.getElementById('toggle-business');
-      const nameLabel = document.getElementById('nameLabel');
-      const nameInput = document.getElementById('fullName');
-      const submitBtn = document.getElementById('submitBtn');
-
-      trackInput.value = track;
-
-      if (track === 'business') {
-        btnBusiness.classList.add('active');
-        btnConsumer.classList.remove('active');
-        nameLabel.textContent = 'Founder Name / Business Name';
-        nameInput.placeholder = 'e.g., Jordan Vance — Steel City Roasters';
-        submitBtn.innerHTML = 'Proceed to Business Expansion Charter &rarr;';
-      } else {
-        btnConsumer.classList.add('active');
-        btnBusiness.classList.remove('active');
-        nameLabel.textContent = 'Your Full Name';
-        nameInput.placeholder = 'e.g., Jordan Vance';
-        submitBtn.innerHTML = 'Proceed to Membership Charter &rarr;';
-      }
+    function switchTrack(track) {
+      document.getElementById('memberTrack').value = track;
+      document.getElementById('tabConsumer').classList.toggle('active', track === 'consumer');
+      document.getElementById('tabBusiness').classList.toggle('active', track === 'business');
+      document.getElementById('nameLbl').textContent = track === 'business' ? 'Founder / Business Name' : 'Full Name';
     }
 
-    // Smooth scroll helper triggered by Hero & Matrix CTA buttons
-    function selectTrackAndScroll(track) {
-      setMemberTrack(track);
-      const portal = document.getElementById('access-portal');
-      if (portal) {
-        portal.scrollIntoView({ behavior: 'smooth' });
-        setTimeout(() => {
-          document.getElementById('fullName').focus();
-        }, 550);
-      }
-    }
-
-    // Form Submit Handler with mandatory NOT NULL columns ('brand_source' & 'signup_funnel')
-    async function handleGuildLeadSubmit(event) {
-      event.preventDefault();
-
+    async function submitGuildLead(e) {
+      e.preventDefault();
       const fullName = document.getElementById('fullName').value.trim();
-      const email = document.getElementById('emailAddress').value.trim();
-      const track = document.getElementById('selectedTrack').value;
-      const submitBtn = document.getElementById('submitBtn');
-      const statusBanner = document.getElementById('statusBanner');
+      const email = document.getElementById('emailAddr').value.trim();
+      const track = document.getElementById('memberTrack').value;
+      const btn = document.getElementById('submitBtn');
+      const status = document.getElementById('statusBox');
 
-      if (!fullName || !email) return;
+      btn.disabled = true;
+      btn.textContent = 'Verifying Credentials...';
 
-      submitBtn.disabled = true;
-      submitBtn.textContent = 'Securing Your Guild Dossier...';
-      statusBanner.className = 'status-banner';
-      statusBanner.style.display = 'none';
-
-      // Build payload with BOTH mandatory NOT NULL columns that caused earlier failures
-      const leadPayload = {
+      const payload = {
         full_name: fullName,
         email: email,
-        brand_source: 'The Guild', // Constraint Fix #1
-        signup_funnel: track === 'business' ? 'guild_index_business' : 'guild_index_consumer' // Constraint Fix #2
+        brand_source: 'The Guild',
+        signup_funnel: track === 'business' ? 'guild_index_business' : 'guild_index_consumer'
       };
 
-      // Save state locally so Page 2 can personalize the header & checkout
       sessionStorage.setItem('guild_lead_name', fullName);
       sessionStorage.setItem('guild_lead_email', email);
       sessionStorage.setItem('guild_lead_track', track);
 
       try {
-        if (supabaseClient) {
-          const { error } = await supabaseClient
-            .from('member_leads')
-            .insert([leadPayload]);
-
-          if (error) {
-            console.error('Supabase Insert Error:', error);
-            throw new Error(error.message);
-          }
-        } else {
-          console.warn('Supabase Anon Key not yet inserted; storing lead in sessionStorage and proceeding to Page 2.');
+        if (sb) {
+          const { error } = await sb.from('member_leads').insert([payload]);
+          if (error) throw new Error(error.message);
         }
-
-        statusBanner.textContent = 'Access Verified! Redirecting you to the Official Guild Charter...';
-        statusBanner.className = 'status-banner success';
-
-        setTimeout(() => {
-          window.location.href = `${NEXT_PAGE_URL}?track=${encodeURIComponent(track)}`;
-        }, 900);
-
+        status.textContent = 'Verified. Routing to The Guild Hub...';
+        status.className = 'status-msg ok';
+        setTimeout(() => { window.location.href = 'guild-hub.html'; }, 750);
       } catch (err) {
-        statusBanner.textContent = `Database Notice: ${err.message}. Verify your RLS policy & Anon Key.`;
-        statusBanner.className = 'status-banner error';
-        submitBtn.disabled = false;
-        submitBtn.innerHTML = 'Proceed to Membership Charter &rarr;';
+        status.textContent = 'Notice: ' + err.message;
+        status.className = 'status-msg err';
+        btn.disabled = false;
+        btn.textContent = 'Proceed to Inner Guild Hub →';
       }
     }
   </script>
